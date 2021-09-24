@@ -1,6 +1,6 @@
-# BjyAuthorize - Acl security for Laminas / ZF3
+# BjyAuthorize - Acl security for Laminas
 
-[![Build Status](https://travis-ci.com/kokspflanze/BjyAuthorize.png?branch=master)](https://travis-ci.com/kokspflanze/BjyAuthorize)
+[![Continuous Integration](https://github.com/kokspflanze/BjyAuthorize/actions/workflows/continous-integration.yml/badge.svg)](https://github.com/kokspflanze/BjyAuthorize/actions/workflows/continous-integration.yml)
 [![Total Downloads](https://poser.pugx.org/kokspflanze/bjy-authorize/downloads.png)](https://packagist.org/packages/kokspflanze/bjy-authorize)
 [![Latest Stable Version](https://poser.pugx.org/kokspflanze/bjy-authorize/v/stable.png)](https://packagist.org/packages/kokspflanze/bjy-authorize)
 
@@ -12,7 +12,7 @@ setup via config files or by using `Laminas\Db` or Doctrine ORM/ODM.
 ## Information
 
 this is a fork of [bjyoungblood/BjyAuthorize](https://github.com/bjyoungblood/BjyAuthorize).
-I added Laminas/ZF3 support, so the module works with Laminas / Zend Framework 2 and 3.
+I added Laminas support, so the module works with Laminas. Releases before 2.0 work with Zend Framework 2 and 3.
 If you found a bug, please report it, just pm me in [gitter](https://gitter.im/kokspflanze) or open a PullRequest.
 
 ## What does BjyAuthorize do?
@@ -30,7 +30,7 @@ And here's how it would look like with BjyAuthorize enabled:
 
 ## Requirements
 
- * [Laminas](https://getlaminas.org/) / [Zend Framework 2](https://github.com/zendframework/zf2)
+ * [Laminas](https://getlaminas.org/)
  * [LmcUser](https://github.com/LM-Commons/LmcUser) (optional)
 
 ## Installation
