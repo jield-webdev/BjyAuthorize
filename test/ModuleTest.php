@@ -1,11 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BjyAuthorizeTest;
 
 use BjyAuthorize\Guard\Controller;
 use BjyAuthorize\Guard\Route;
 use BjyAuthorize\Module;
 use BjyAuthorize\View\UnauthorizedStrategy;
+use InvalidArgumentException;
 use Laminas\EventManager\EventManager;
 use Laminas\Mvc\Application;
 use Laminas\Mvc\MvcEvent;
@@ -31,11 +34,14 @@ class ModuleTest extends TestCase
     public function testIfBoostrapRegistersGuardsAndStrategy()
     {
         $module = new Module();
-        $event = $this->getMockedBootstrapEvent();
+        $event  = $this->getMockedBootstrapEvent();
 
         $module->onBootstrap($event);
     }
 
+    /**
+     * @return MvcEvent
+     */
     protected function getMockedBootstrapEvent()
     {
         $guard1 = $this->getMockBuilder(Controller::class)
@@ -64,7 +70,7 @@ class ModuleTest extends TestCase
 
         $serviceManager->expects($this->any())
             ->method('get')
-            ->will($this->returnCallback(function(string $name) use ($guard1, $guard2, $strategy) {
+            ->will($this->returnCallback(function (string $name) use ($guard1, $guard2, $strategy) {
                 switch ($name) {
                     case 'BjyAuthorize\Config':
                         return ['unauthorized_strategy' => 'my_unauthorized_strategy'];
@@ -73,7 +79,7 @@ class ModuleTest extends TestCase
                     case 'BjyAuthorize\Guards':
                         return [$guard1, $guard2];
                     default:
-                        throw new \InvalidArgumentException('Invalid service call.');
+                        throw new InvalidArgumentException('Invalid service call.');
                 }
             }));
 

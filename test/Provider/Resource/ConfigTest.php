@@ -1,14 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BjyAuthorizeTest\Provider\Resource;
 
-use \PHPUnit\Framework\TestCase;
 use BjyAuthorize\Provider\Resource\Config;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Config resource provider test
- *
- * @author Marco Pivetta <ocramius@gmail.com>
  */
 class ConfigTest extends TestCase
 {
@@ -18,7 +18,7 @@ class ConfigTest extends TestCase
      */
     public function testGetResources()
     {
-        $config = new Config(['resource1', 'resource2',]);
+        $config = new Config(['resource1', 'resource2']);
 
         $resources = $config->getResources();
 

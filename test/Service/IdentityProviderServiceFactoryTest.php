@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BjyAuthorizeTest\Service;
 
 use BjyAuthorize\Provider\Identity\ProviderInterface;
@@ -9,8 +11,6 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Test for {@see \BjyAuthorize\Service\IdentityProviderServiceFactory}
- *
- * @author Marco Pivetta <ocramius@gmail.com>
  */
 class IdentityProviderServiceFactoryTest extends TestCase
 {
@@ -19,10 +19,10 @@ class IdentityProviderServiceFactoryTest extends TestCase
      */
     public function testInvoke()
     {
-        $factory = new IdentityProviderServiceFactory();
-        $container = $this->createMock(ContainerInterface::class);
+        $factory          = new IdentityProviderServiceFactory();
+        $container        = $this->createMock(ContainerInterface::class);
         $identityProvider = $this->createMock(ProviderInterface::class);
-        $config = ['identity_provider' => 'foo'];
+        $config           = ['identity_provider' => 'foo'];
 
         $container
             ->expects($this->any())

@@ -1,21 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BjyAuthorize\Provider\Resource;
+
+use Laminas\Permissions\Acl\Resource\ResourceInterface;
 
 /**
  * Array-based resources list
- *
- * @author Ben Youngblood <bx.youngblood@gmail.com>
  */
 class Config implements ProviderInterface
 {
-    /**
-     * @var \Laminas\Permissions\Acl\Resource\ResourceInterface[]
-     */
+    /** @var ResourceInterface[] */
     protected $resources = [];
 
     /**
-     * @param \Laminas\Permissions\Acl\Resource\ResourceInterface[] $config
+     * @param ResourceInterface[] $config
      */
     public function __construct(array $config = [])
     {

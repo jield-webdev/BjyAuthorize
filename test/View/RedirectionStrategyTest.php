@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BjyAuthorizeTest\View;
 
 use BjyAuthorize\Exception\UnAuthorizedException;
@@ -12,19 +14,15 @@ use Laminas\Mvc\Application;
 use Laminas\Mvc\MvcEvent;
 use Laminas\Router\RouteInterface;
 use Laminas\Router\RouteMatch;
-use PHPUnit\Framework\TestCase;
 use Laminas\Stdlib\ResponseInterface;
+use PHPUnit\Framework\TestCase;
 
 /**
  * UnauthorizedStrategyTest view strategy test
- *
- * @author Marco Pivetta <ocramius@gmail.com>
  */
 class RedirectionStrategyTest extends TestCase
 {
-    /**
-     * @var \BjyAuthorize\View\RedirectionStrategy
-     */
+    /** @var RedirectionStrategy */
     protected $strategy;
 
     /**
@@ -71,8 +69,8 @@ class RedirectionStrategyTest extends TestCase
      */
     public function testWillIgnoreUnrecognizedResponse()
     {
-        $mvcEvent = $this->createMock(MvcEvent::class);
-        $response = $this->createMock(ResponseInterface::class);
+        $mvcEvent   = $this->createMock(MvcEvent::class);
+        $response   = $this->createMock(ResponseInterface::class);
         $routeMatch = $this->getMockBuilder(RouteMatch::class)->disableOriginalConstructor()->getMock();
 
         $mvcEvent->expects($this->any())->method('getResponse')->will($this->returnValue($response));
@@ -88,10 +86,10 @@ class RedirectionStrategyTest extends TestCase
      */
     public function testWillIgnoreUnrecognizedErrorType()
     {
-        $mvcEvent = $this->createMock(MvcEvent::class);
-        $response = $this->createMock(Response::class);
+        $mvcEvent   = $this->createMock(MvcEvent::class);
+        $response   = $this->createMock(Response::class);
         $routeMatch = $this->getMockBuilder(RouteMatch::class)->disableOriginalConstructor()->getMock();
-        $route = $this->createMock(RouteInterface::class);
+        $route      = $this->createMock(RouteInterface::class);
 
         $mvcEvent->expects($this->any())->method('getResponse')->will($this->returnValue($response));
         $mvcEvent->expects($this->any())->method('getRouteMatch')->will($this->returnValue($routeMatch));
@@ -107,8 +105,8 @@ class RedirectionStrategyTest extends TestCase
      */
     public function testWillIgnoreOnExistingResult()
     {
-        $mvcEvent = $this->createMock(MvcEvent::class);
-        $response = $this->createMock(Response::class);
+        $mvcEvent   = $this->createMock(MvcEvent::class);
+        $response   = $this->createMock(Response::class);
         $routeMatch = $this->getMockBuilder(RouteMatch::class)->disableOriginalConstructor()->getMock();
 
         $mvcEvent->expects($this->any())->method('getResult')->will($this->returnValue($response));
@@ -145,11 +143,11 @@ class RedirectionStrategyTest extends TestCase
         $this->strategy->setRedirectRoute('redirect/route');
         $this->strategy->setRedirectUri(null);
 
-        $mvcEvent = $this->createMock(MvcEvent::class);
-        $response = $this->createMock(Response::class);
+        $mvcEvent   = $this->createMock(MvcEvent::class);
+        $response   = $this->createMock(Response::class);
         $routeMatch = $this->getMockBuilder(RouteMatch::class)->disableOriginalConstructor()->getMock();
-        $route = $this->getMockForAbstractClass(RouteInterface::class, [], '', true, true, true, ['assemble']);
-        $headers = $this->createMock(Headers::class);
+        $route      = $this->getMockForAbstractClass(RouteInterface::class, [], '', true, true, true, ['assemble']);
+        $headers    = $this->createMock(Headers::class);
 
         $mvcEvent->expects($this->any())->method('getResponse')->will($this->returnValue($response));
         $mvcEvent->expects($this->any())->method('getRouteMatch')->will($this->returnValue($routeMatch));
@@ -180,11 +178,11 @@ class RedirectionStrategyTest extends TestCase
     {
         $this->strategy->setRedirectUri('http://www.example.org/');
 
-        $mvcEvent = $this->createMock(MvcEvent::class);
-        $response = $this->createMock(Response::class);
+        $mvcEvent   = $this->createMock(MvcEvent::class);
+        $response   = $this->createMock(Response::class);
         $routeMatch = $this->getMockBuilder(RouteMatch::class)->disableOriginalConstructor()->getMock();
-        $route = $this->createMock(RouteInterface::class);
-        $headers = $this->createMock(Headers::class);
+        $route      = $this->createMock(RouteInterface::class);
+        $headers    = $this->createMock(Headers::class);
 
         $mvcEvent->expects($this->any())->method('getResponse')->will($this->returnValue($response));
         $mvcEvent->expects($this->any())->method('getRouteMatch')->will($this->returnValue($routeMatch));
@@ -209,12 +207,12 @@ class RedirectionStrategyTest extends TestCase
     {
         $this->strategy->setRedirectUri('http://www.example.org/');
 
-        $mvcEvent = $this->createMock(MvcEvent::class);
-        $response = $this->createMock(Response::class);
+        $mvcEvent   = $this->createMock(MvcEvent::class);
+        $response   = $this->createMock(Response::class);
         $routeMatch = $this->getMockBuilder(RouteMatch::class)->disableOriginalConstructor()->getMock();
-        $route = $this->createMock(RouteInterface::class);
-        $headers = $this->createMock(Headers::class);
-        $exception = $this->createMock(UnAuthorizedException::class);
+        $route      = $this->createMock(RouteInterface::class);
+        $headers    = $this->createMock(Headers::class);
+        $exception  = $this->createMock(UnAuthorizedException::class);
 
         $mvcEvent->expects($this->any())->method('getResponse')->will($this->returnValue($response));
         $mvcEvent->expects($this->any())->method('getRouteMatch')->will($this->returnValue($routeMatch));

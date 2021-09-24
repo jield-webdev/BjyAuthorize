@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BjyAuthorize\View\Helper;
 
 use BjyAuthorize\Service\Authorize;
@@ -20,14 +22,13 @@ class IsAllowedFactory implements FactoryInterface
     }
 
     /**
-     * @param ContainerInterface $container
      * @param string $requestedName
      * @param array|null $options
      * @return IsAllowed
      */
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)
     {
-        /* @var $authorize \BjyAuthorize\Service\Authorize */
+        /** @var Authorize $authorize */
         $authorize = $container->get(Authorize::class);
 
         return new IsAllowed($authorize);

@@ -1,31 +1,29 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BjyAuthorizeTest\Provider\Role;
 
 use BjyAuthorize\Acl\Role;
 use BjyAuthorize\Provider\Role\LaminasDb;
-use \PHPUnit\Framework\TestCase;
+use BjyAuthorize\Provider\Role\ObjectRepositoryProvider;
+use Laminas\Db\TableGateway\TableGateway;
+use Laminas\ServiceManager\ServiceLocatorInterface;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 
 /**
  * {@see \BjyAuthorize\Provider\Role\LaminasDb} test
- *
- * @author Tom Oram <tom@scl.co.uk>
  */
 class LaminasDbTest extends TestCase
 {
-    /**
-     * @var \BjyAuthorize\Provider\Role\ObjectRepositoryProvider
-     */
+    /** @var ObjectRepositoryProvider */
     private $provider;
 
-    /**
-     * @var \Laminas\ServiceManager\ServiceLocatorInterface|\PHPUnit\Framework\MockObject\MockObject
-     */
+    /** @var ServiceLocatorInterface|MockObject */
     private $serviceLocator;
 
-    /**
-     * @var \Laminas\Db\TableGateway\TableGateway|\PHPUnit\Framework\MockObject\MockObject
-     */
+    /** @var TableGateway|MockObject */
     private $tableGateway;
 
     /**
@@ -33,9 +31,9 @@ class LaminasDbTest extends TestCase
      */
     protected function setUp(): void
     {
-        $this->serviceLocator = $this->createMock('Laminas\ServiceManager\ServiceLocatorInterface');
+        $this->serviceLocator = $this->createMock(ServiceLocatorInterface::class);
         $this->provider       = new LaminasDb([], $this->serviceLocator);
-        $this->tableGateway   = $this->getMockBuilder('Laminas\Db\TableGateway\TableGateway')
+        $this->tableGateway   = $this->getMockBuilder(TableGateway::class)
                                      ->disableOriginalConstructor()
                                      ->getMock();
     }

@@ -1,14 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BjyAuthorizeTest\Provider\Role;
 
-use \PHPUnit\Framework\TestCase;
+use BjyAuthorize\Acl\Role;
 use BjyAuthorize\Provider\Role\Config;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Config resource provider test
- *
- * @author Marco Pivetta <ocramius@gmail.com>
  */
 class ConfigTest extends TestCase
 {
@@ -39,9 +40,9 @@ class ConfigTest extends TestCase
 
         $this->assertCount(7, $roles);
 
-        /* @var $role \BjyAuthorize\Acl\Role */
+        /** @var Role $role */
         foreach ($roles as $role) {
-            $this->assertInstanceOf('BjyAuthorize\Acl\Role', $role);
+            $this->assertInstanceOf(Role::class, $role);
             $this->assertContains(
                 $role->getRoleId(),
                 ['role1', 'role2', 'role3', 'role4', 'role5', 'role6', 'role7']

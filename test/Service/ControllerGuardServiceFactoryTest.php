@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BjyAuthorizeTest\Service;
 
 use BjyAuthorize\Guard\Controller;
@@ -9,8 +11,6 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Test for {@see \BjyAuthorize\Service\ControllerGuardServiceFactory}
- *
- * @author Marco Pivetta <ocramius@gmail.com>
  */
 class ControllerGuardServiceFactoryTest extends TestCase
 {
@@ -19,9 +19,9 @@ class ControllerGuardServiceFactoryTest extends TestCase
      */
     public function testInvoke()
     {
-        $factory = new ControllerGuardServiceFactory();
+        $factory   = new ControllerGuardServiceFactory();
         $container = $this->createMock(ContainerInterface::class);
-        $config = [
+        $config    = [
             'guards' => [
                 Controller::class => [],
             ],

@@ -1,94 +1,81 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BjyAuthorize\Service;
 
-use BjyAuthorize\Acl\Role;
 use BjyAuthorize\Guard\GuardInterface;
 use BjyAuthorize\Provider\Identity\ProviderInterface as IdentityProvider;
 use BjyAuthorize\Provider\Resource\ProviderInterface as ResourceProvider;
 use BjyAuthorize\Provider\Role\ProviderInterface as RoleProvider;
 use BjyAuthorize\Provider\Rule\ProviderInterface as RuleProvider;
+use Closure;
 use Interop\Container\ContainerInterface;
 use Laminas\Cache\Storage\StorageInterface;
 use Laminas\Permissions\Acl\Acl;
 use Laminas\Permissions\Acl\Exception\InvalidArgumentException;
 use Laminas\Permissions\Acl\Resource\GenericResource;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
+use Laminas\Permissions\Acl\Role\RoleInterface;
+use Traversable;
+
+use function count;
+use function is_array;
+use function is_int;
+use function is_string;
+use function print_r;
 
 /**
  * Authorize service
- *
- * @author Ben Youngblood <bx.youngblood@gmail.com>
  */
 class Authorize
 {
-    const TYPE_ALLOW = 'allow';
+    public const TYPE_ALLOW = 'allow';
 
-    const TYPE_DENY = 'deny';
+    public const TYPE_DENY = 'deny';
 
-    /**
-     * @var Acl
-     */
+    /** @var Acl */
     protected $acl;
 
-    /**
-     * @var RoleProvider[]
-     */
+    /** @var RoleProvider[] */
     protected $roleProviders = [];
 
-    /**
-     * @var ResourceProvider[]
-     */
+    /** @var ResourceProvider[] */
     protected $resourceProviders = [];
 
-    /**
-     * @var RuleProvider[]
-     */
+    /** @var RuleProvider[] */
     protected $ruleProviders = [];
 
-    /**
-     * @var IdentityProvider
-     */
+    /** @var IdentityProvider */
     protected $identityProvider;
 
-    /**
-     * @var GuardInterface[]
-     */
+    /** @var GuardInterface[] */
     protected $guards = [];
 
-    /**
-     * @var \Closure|null
-     */
+    /** @var Closure|null */
     protected $loaded;
 
-    /**
-     * @var ContainerInterface
-     */
+    /** @var ContainerInterface */
     protected $serviceLocator;
 
-    /**
-     * @var array
-     */
+    /** @var array */
     protected $config;
 
     /**
      * @param array $config
-     * @param ContainerInterface $serviceLocator
      */
     public function __construct(array $config, ContainerInterface $serviceLocator)
     {
-        $this->config = $config;
+        $this->config         = $config;
         $this->serviceLocator = $serviceLocator;
-        $that = $this;
-        $this->loaded = function () use ($that) {
+        $that                 = $this;
+        $this->loaded         = function () use ($that) {
             $that->load();
         };
     }
 
     /**
      * @deprecated this method will be removed in BjyAuthorize 2.0.x
-     *
-     * @param RoleProvider $provider
      *
      * @return self
      */
@@ -104,8 +91,6 @@ class Authorize
     /**
      * @deprecated this method will be removed in BjyAuthorize 2.0.x
      *
-     * @param ResourceProvider $provider
-     *
      * @return self
      */
     public function addResourceProvider(ResourceProvider $provider)
@@ -120,8 +105,6 @@ class Authorize
     /**
      * @deprecated this method will be removed in BjyAuthorize 2.0.x
      *
-     * @param RuleProvider $provider
-     *
      * @return self
      */
     public function addRuleProvider(RuleProvider $provider)
@@ -135,8 +118,6 @@ class Authorize
 
     /**
      * @deprecated this method will be removed in BjyAuthorize 2.0.x
-     *
-     * @param IdentityProvider $provider
      *
      * @return self
      */
@@ -163,8 +144,6 @@ class Authorize
 
     /**
      * @deprecated this method will be removed in BjyAuthorize 2.0.x
-     *
-     * @param GuardInterface $guard
      *
      * @return self
      */
@@ -225,7 +204,6 @@ class Authorize
     /**
      * @param string|ResourceInterface $resource
      * @param string $privilege
-     *
      * @return bool
      */
     public function isAllowed($resource, $privilege = null)
@@ -254,27 +232,27 @@ class Authorize
 
         $this->loaded = null;
 
-        /** @var $cache StorageInterface */
+        /** @var StorageInterface $cache */
         $cache = $this->serviceLocator->get('BjyAuthorize\Cache');
 
-        /** @var $cacheKeyGenerator callable */
+        /** @var callable $cacheKeyGenerator */
         $cacheKeyGenerator = $this->serviceLocator->get('BjyAuthorize\CacheKeyGenerator');
-        $cacheKey = $cacheKeyGenerator();
+        $cacheKey          = $cacheKeyGenerator();
 
-        $success = false;
+        $success      = false;
         $cacheEnabled = $this->config['cache_enabled'] ?? false;
         if ($cacheEnabled) {
             $this->acl = $cache->getItem($cacheKey, $success);
         }
 
-        if (!($this->acl instanceof Acl) || !$success) {
+        if (! $this->acl instanceof Acl || ! $success) {
             $this->loadAcl();
             if ($cacheEnabled) {
                 $cache->setItem($cacheKey, $this->acl);
             }
         }
 
-        $this->setIdentityProvider($this->serviceLocator->get('BjyAuthorize\Provider\Identity\ProviderInterface'));
+        $this->setIdentityProvider($this->serviceLocator->get(IdentityProvider::class));
 
         $parentRoles = $this->getIdentityProvider()->getIdentityRoles();
 
@@ -284,15 +262,15 @@ class Authorize
     /**
      * @deprecated this method will be removed in BjyAuthorize 2.0.x
      *
-     * @param \Laminas\Permissions\Acl\Role\RoleInterface[] $roles
+     * @param RoleInterface[] $roles
      */
     protected function addRoles($roles)
     {
-        if (!is_array($roles) && !($roles instanceof \Traversable)) {
+        if (! is_array($roles) && ! $roles instanceof Traversable) {
             $roles = [$roles];
         }
 
-        /* @var $role Role */
+        /** @var Role $role */
         foreach ($roles as $role) {
             if ($this->acl->hasRole($role)) {
                 continue;
@@ -301,7 +279,7 @@ class Authorize
             if ($role->getParent() !== null) {
                 $this->addRoles([$role->getParent()]);
                 $this->acl->addRole($role, $role->getParent());
-            } elseif (!$this->acl->hasRole($role)) {
+            } elseif (! $this->acl->hasRole($role)) {
                 $this->acl->addRole($role);
             }
         }
@@ -310,12 +288,12 @@ class Authorize
     /**
      * @deprecated this method will be removed in BjyAuthorize 2.0.x
      *
-     * @param string[]|\Laminas\Permissions\Acl\Resource\ResourceInterface[] $resources
+     * @param string[]|ResourceInterface[] $resources
      * @param mixed|null $parent
      */
     protected function loadResource($resources, $parent = null)
     {
-        if (!is_array($resources) && !($resources instanceof \Traversable)) {
+        if (! is_array($resources) && ! $resources instanceof Traversable) {
             throw new \InvalidArgumentException('Resources argument must be traversable: ' . print_r($resources, true));
         }
 
@@ -328,10 +306,10 @@ class Authorize
                 $key = new GenericResource($value);
             }
 
-            if (is_array($value) || ($value instanceof \Traversable)) {
+            if (is_array($value) || $value instanceof Traversable) {
                 $this->acl->addResource($key, $parent);
                 $this->loadResource($value, $key);
-            } elseif (!$this->acl->hasResource($key)) {
+            } elseif (! $this->acl->hasResource($key)) {
                 $this->acl->addResource($key, $parent);
             }
         }
@@ -348,15 +326,15 @@ class Authorize
     protected function loadRule(array $rule, $type)
     {
         $privileges = $assertion = null;
-        $ruleSize = count($rule);
+        $ruleSize   = count($rule);
 
         if (4 === $ruleSize) {
-            list($roles, $resources, $privileges, $assertion) = $rule;
-            $assertion = $this->serviceLocator->get($assertion);
+            [$roles, $resources, $privileges, $assertion] = $rule;
+            $assertion                                    = $this->serviceLocator->get($assertion);
         } elseif (3 === $ruleSize) {
-            list($roles, $resources, $privileges) = $rule;
+            [$roles, $resources, $privileges] = $rule;
         } elseif (2 === $ruleSize) {
-            list($roles, $resources) = $rule;
+            [$roles, $resources] = $rule;
         } else {
             throw new \InvalidArgumentException('Invalid rule definition: ' . print_r($rule, true));
         }

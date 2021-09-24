@@ -1,14 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BjyAuthorizeTest\View\Helper;
 
-use \PHPUnit\Framework\TestCase;
+use BjyAuthorize\Service\Authorize;
 use BjyAuthorize\View\Helper\IsAllowed;
+use PHPUnit\Framework\TestCase;
 
 /**
  * IsAllowed view helper test
- *
- * @author Marco Pivetta <ocramius@gmail.com>
  */
 class IsAllowedTest extends TestCase
 {
@@ -17,7 +18,7 @@ class IsAllowedTest extends TestCase
      */
     public function testIsAllowed()
     {
-        $authorize = $this->getMockBuilder('BjyAuthorize\\Service\\Authorize')->disableOriginalConstructor()->getMock();
+        $authorize = $this->getMockBuilder(Authorize::class)->disableOriginalConstructor()->getMock();
         $authorize
             ->expects($this->once())
             ->method('isAllowed')
@@ -27,7 +28,7 @@ class IsAllowedTest extends TestCase
         $plugin = new IsAllowed($authorize);
         $this->assertTrue($plugin->__invoke('test', 'privilege'));
 
-        $authorize2 = $this->getMockBuilder('BjyAuthorize\\Service\\Authorize')->disableOriginalConstructor()->getMock();
+        $authorize2 = $this->getMockBuilder(Authorize::class)->disableOriginalConstructor()->getMock();
         $authorize2
             ->expects($this->once())
             ->method('isAllowed')

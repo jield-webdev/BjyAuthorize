@@ -1,4 +1,8 @@
-<?php /** @noinspection ALL */
+<?php
+
+/** @noinspection ALL */
+
+declare(strict_types=1);
 
 namespace BjyAuthorize\Guard;
 
@@ -7,37 +11,30 @@ use BjyAuthorize\Provider\Rule\ProviderInterface as RuleProviderInterface;
 use Interop\Container\ContainerInterface;
 use Laminas\EventManager\AbstractListenerAggregate;
 
+use function array_keys;
+
 abstract class AbstractGuard extends AbstractListenerAggregate implements
     GuardInterface,
     RuleProviderInterface,
     ResourceProviderInterface
 {
-    /**
-     * @var ContainerInterface
-     */
+    /** @var ContainerInterface */
     protected $container;
 
-    /**
-     * @var array[]
-     */
+    /** @var array[] */
     protected $rules = [];
 
     /**
-     *
      * @param array $rules
-     * @param ContainerInterface $container
      */
     public function __construct(array $rules, ContainerInterface $container)
     {
         $this->container = $container;
-
         foreach ($rules as $rule) {
-            $rule['roles'] = (array)$rule['roles'];
-            $rule['action'] = isset($rule['action']) ? (array)$rule['action'] : [null];
-
+            $rule['roles']  = (array) $rule['roles'];
+            $rule['action'] = isset($rule['action']) ? (array) $rule['action'] : [null];
             foreach ($this->extractResourcesFromRule($rule) as $resource) {
-                $this->rules[$resource] = ['roles' => (array)$rule['roles']];
-
+                $this->rules[$resource] = ['roles' => (array) $rule['roles']];
                 if (isset($rule['assertion'])) {
                     $this->rules[$resource]['assertion'] = $rule['assertion'];
                 }
@@ -53,7 +50,6 @@ abstract class AbstractGuard extends AbstractListenerAggregate implements
     public function getResources()
     {
         $resources = [];
-
         foreach (array_keys($this->rules) as $resource) {
             $resources[] = $resource;
         }
@@ -68,12 +64,12 @@ abstract class AbstractGuard extends AbstractListenerAggregate implements
     {
         $rules = [];
         foreach ($this->rules as $resource => $ruleData) {
-            $rule = [];
+            $rule   = [];
             $rule[] = $ruleData['roles'];
             $rule[] = $resource;
-
             if (isset($ruleData['assertion'])) {
-                $rule[] = null; // no privilege
+                $rule[] = null;
+        // no privilege
                 $rule[] = $ruleData['assertion'];
             }
 

@@ -1,19 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BjyAuthorize\Provider\Role;
 
 use BjyAuthorize\Acl\Role;
+use Laminas\Permissions\Acl\Role\RoleInterface;
+
+use function array_merge;
+use function count;
+use function is_numeric;
 
 /**
  * Array config based Role provider
- *
- * @author Ben Youngblood <bx.youngblood@gmail.com>
  */
 class Config implements ProviderInterface
 {
-    /**
-     * @var \Laminas\Permissions\Acl\Role\RoleInterface[]
-     */
+    /** @var RoleInterface[] */
     protected $roles = [];
 
     /**
@@ -38,7 +41,6 @@ class Config implements ProviderInterface
      * @param string $name
      * @param array $options
      * @param string|null $parent
-     *
      * @return array
      */
     protected function loadRole($name, $options = [], $parent = null)
@@ -49,8 +51,8 @@ class Config implements ProviderInterface
             $children = [];
         }
 
-        $roles = [];
-        $role = new Role($name, $parent);
+        $roles   = [];
+        $role    = new Role($name, $parent);
         $roles[] = $role;
 
         foreach ($children as $key => $value) {

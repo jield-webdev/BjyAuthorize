@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BjyAuthorize\View;
 
 use BjyAuthorize\Exception\UnAuthorizedException;
@@ -16,19 +18,13 @@ use Laminas\View\Model\ViewModel;
 /**
  * Dispatch error handler, catches exceptions related with authorization and
  * configures the application response accordingly.
- *
- * @author Ben Youngblood <bx.youngblood@gmail.com>
  */
 class UnauthorizedStrategy implements ListenerAggregateInterface
 {
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $template;
 
-    /**
-     * @var callable[] An array with callback functions or methods.
-     */
+    /** @var callable[] An array with callback functions or methods. */
     protected $listeners = [];
 
     /**
@@ -36,7 +32,7 @@ class UnauthorizedStrategy implements ListenerAggregateInterface
      */
     public function __construct($template)
     {
-        $this->template = (string)$template;
+        $this->template = (string) $template;
     }
 
     /**
@@ -64,7 +60,7 @@ class UnauthorizedStrategy implements ListenerAggregateInterface
      */
     public function setTemplate($template)
     {
-        $this->template = (string)$template;
+        $this->template = (string) $template;
     }
 
     /**
@@ -80,41 +76,39 @@ class UnauthorizedStrategy implements ListenerAggregateInterface
      * response object with an according error if the application
      * event contains an exception related with authorization.
      *
-     * @param MvcEvent $event
-     *
      * @return void
      */
     public function onDispatchError(MvcEvent $event)
     {
         // Do nothing if the result is a response object
-        $result = $event->getResult();
+        $result   = $event->getResult();
         $response = $event->getResponse();
 
-        if ($result instanceof Response || ($response && !$response instanceof HttpResponse)) {
+        if ($result instanceof Response || ($response && ! $response instanceof HttpResponse)) {
             return;
         }
 
         // Common view variables
         $viewVariables = [
-            'error' => $event->getParam('error'),
+            'error'    => $event->getParam('error'),
             'identity' => $event->getParam('identity'),
         ];
 
         switch ($event->getError()) {
             case Controller::ERROR:
                 $viewVariables['controller'] = $event->getParam('controller');
-                $viewVariables['action'] = $event->getParam('action');
+                $viewVariables['action']     = $event->getParam('action');
                 break;
             case Route::ERROR:
                 $viewVariables['route'] = $event->getParam('route');
                 break;
             case Application::ERROR_EXCEPTION:
-                if (!($event->getParam('exception') instanceof UnAuthorizedException)) {
+                if (! $event->getParam('exception') instanceof UnAuthorizedException) {
                     return;
                 }
 
                 $viewVariables['reason'] = $event->getParam('exception')->getMessage();
-                $viewVariables['error'] = 'error-unauthorized';
+                $viewVariables['error']  = 'error-unauthorized';
                 break;
             default:
                 /*
@@ -126,7 +120,7 @@ class UnauthorizedStrategy implements ListenerAggregateInterface
                 return;
         }
 
-        $model = new ViewModel($viewVariables);
+        $model    = new ViewModel($viewVariables);
         $response = $response ?: new HttpResponse();
 
         $model->setTemplate($this->getTemplate());

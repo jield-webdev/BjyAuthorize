@@ -1,16 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BjyAuthorizeTest\Service;
 
-use \PHPUnit\Framework\TestCase;
-use BjyAuthorize\Service\LaminasDbRoleProviderServiceFactory;
 use BjyAuthorize\Provider\Role\LaminasDb;
+use BjyAuthorize\Service\LaminasDbRoleProviderServiceFactory;
 use Interop\Container\ContainerInterface;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Test for {@see \BjyAuthorize\Service\LaminasDbRoleProviderServiceFactory}
- *
- * @author Marco Pivetta <ocramius@gmail.com>
  */
 class LaminasDbRoleProviderServiceFactoryTest extends TestCase
 {
@@ -19,9 +19,9 @@ class LaminasDbRoleProviderServiceFactoryTest extends TestCase
      */
     public function testInvoke()
     {
-        $factory = new LaminasDbRoleProviderServiceFactory();
+        $factory   = new LaminasDbRoleProviderServiceFactory();
         $container = $this->createMock(ContainerInterface::class);
-        $config = [
+        $config    = [
             'role_providers' => [
                 LaminasDb::class => [],
             ],
