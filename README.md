@@ -11,8 +11,9 @@ setup via config files or by using `Laminas\Db` or Doctrine ORM/ODM.
 
 ## Information
 
-this is a fork of [bjyoungblood/BjyAuthorize](https://github.com/bjyoungblood/BjyAuthorize).
-I added Laminas support, so the module works with Laminas. Releases before 2.0 work with Zend Framework 2 and 3.
+This is a fork of the original [bjyoungblood/BjyAuthorize](https://github.com/bjyoungblood/BjyAuthorize) module.
+I added Laminas support, so starting with release 2.0.0 the module works with Laminas. 
+Releases from the 1.x series are still targeted at Zend Framework 2 and 3.
 If you found a bug, please report it, just pm me in [gitter](https://gitter.im/kokspflanze) or open a PullRequest.
 
 ## What does BjyAuthorize do?
@@ -40,7 +41,7 @@ And here's how it would look like with BjyAuthorize enabled:
 The suggested installation method is via [composer](http://getcomposer.org/):
 
 ```sh
-php composer.phar require kokspflanze/bjy-authorize
+composer require kokspflanze/bjy-authorize
 ```
 
 ## Configuration
@@ -71,7 +72,7 @@ return [
          * roles the "identity role" should inherit from.
          * for LmcUser, this will be your default identity provider
         */
-        'identity_provider' => \BjyAuthorize\Provider\Identity\LmcUserZendDb::class,
+        'identity_provider' => \BjyAuthorize\Provider\Identity\LmcUserLaminasDb::class,
 
         /* If you only have a default role and an authenticated role, you can
          * use the 'AuthenticationIdentityProvider' to allow/restrict access
@@ -101,7 +102,7 @@ return [
 
             // this will load roles from the user_role table in a database
             // format: user_role(role_id(varchar], parent(varchar))
-            \BjyAuthorize\Provider\Role\ZendDb::class => [
+            \BjyAuthorize\Provider\Role\LaminasDb::class => [
                 'table'                 => 'user_role',
                 'identifier_field_name' => 'id',
                 'role_id_field'         => 'role_id',
@@ -127,7 +128,7 @@ return [
         ],
 
         /* rules can be specified here with the format:
-         * [roles (array], resource, [privilege (array|string], assertion])
+         * [roles (array), resource, privilege (array|string), assertion]
          * assertions will be loaded using the service manager and must implement
          * Laminas\Acl\Assertion\AssertionInterface.
          * *if you use assertions, define them using the service manager!*
@@ -213,5 +214,6 @@ function cafeAction() {
 ```
 
 ## License
-Released under the MIT License. See file [LICENSE](https://github.com/bjyoungblood/BjyAuthorize/blob/master/LICENSE)
+
+Released under the MIT License. See file [LICENSE](./LICENSE)
 included with the source code for this project for a copy of the licensing terms.
