@@ -1,6 +1,6 @@
 # BjyAuthorize - Acl security for Laminas
 
-[![Build Status](https://travis-ci.com/kokspflanze/BjyAuthorize.png?branch=master)](https://travis-ci.com/kokspflanze/BjyAuthorize)
+[![Continuous Integration](https://github.com/kokspflanze/BjyAuthorize/actions/workflows/continous-integration.yml/badge.svg)](https://github.com/kokspflanze/BjyAuthorize/actions/workflows/continous-integration.yml)
 [![Total Downloads](https://poser.pugx.org/kokspflanze/bjy-authorize/downloads.png)](https://packagist.org/packages/kokspflanze/bjy-authorize)
 [![Latest Stable Version](https://poser.pugx.org/kokspflanze/bjy-authorize/v/stable.png)](https://packagist.org/packages/kokspflanze/bjy-authorize)
 
