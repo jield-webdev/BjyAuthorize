@@ -2,15 +2,11 @@
 
 namespace BjyAuthorize;
 
-use BjyAuthorize\Controller\Plugin;
 use BjyAuthorize\Guard\AbstractGuard;
-use BjyAuthorize\View\Helper;
 use BjyAuthorize\View\UnauthorizedStrategy;
 use Laminas\EventManager\EventInterface;
 use Laminas\ModuleManager\Feature\BootstrapListenerInterface;
 use Laminas\ModuleManager\Feature\ConfigProviderInterface;
-use Laminas\ModuleManager\Feature\ControllerPluginProviderInterface;
-use Laminas\ModuleManager\Feature\ViewHelperProviderInterface;
 use Laminas\ServiceManager\ServiceManager;
 
 /**
@@ -20,9 +16,7 @@ use Laminas\ServiceManager\ServiceManager;
  */
 class Module implements
     BootstrapListenerInterface,
-    ConfigProviderInterface,
-    ControllerPluginProviderInterface,
-    ViewHelperProviderInterface
+    ConfigProviderInterface
 {
     /**
      * {@inheritDoc}
@@ -51,30 +45,6 @@ class Module implements
         }
 
         $strategy->attach($app->getEventManager());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getViewHelperConfig()
-    {
-        return [
-            'factories' => [
-                'isAllowed' => Helper\IsAllowedFactory::class,
-            ],
-        ];
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getControllerPluginConfig()
-    {
-        return [
-            'factories' => [
-                'isAllowed' => Plugin\IsAllowedFactory::class
-            ],
-        ];
     }
 
     /**

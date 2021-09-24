@@ -86,11 +86,21 @@ return [
             Service\AuthorizeAwareServiceInitializer::class
         ],
     ],
+    'controller_plugins' => [
+        'factories' => [
+            'isAllowed' => Controller\Plugin\IsAllowedFactory::class
+        ],
+    ],
     'view_manager' => [
         'template_map' => [
             'error/403' => __DIR__ . '/../view/error/403.phtml',
             'laminas-developer-tools/toolbar/bjy-authorize-role'
                 => __DIR__ . '/../view/laminas-developer-tools/toolbar/bjy-authorize-role.phtml',
+        ],
+    ],
+    'view_helpers' => [
+        'factories' => [
+            'isAllowed' => View\Helper\IsAllowedFactory::class,
         ],
     ],
     'laminas-developer-tools' => [
