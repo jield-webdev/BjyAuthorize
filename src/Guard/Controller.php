@@ -82,7 +82,7 @@ class Controller extends AbstractGuard
         $controller = $match->getParam('controller');
         $action     = $match->getParam('action');
         $request    = $event->getRequest();
-        $method     = $request instanceof HttpRequest ? strtolower($request->getMethod()) : null;
+        $method     = $request instanceof HttpRequest ? strtolower((string) $request->getMethod()) : null;
 
         $authorized = (class_exists(ConsoleRequest::class) && $event->getRequest() instanceof ConsoleRequest)
             || $service->isAllowed($this->getResourceName($controller))
