@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BjyAuthorize;
 
 use BjyAuthorize\Guard\AbstractGuard;
@@ -7,12 +9,11 @@ use BjyAuthorize\View\UnauthorizedStrategy;
 use Laminas\EventManager\EventInterface;
 use Laminas\ModuleManager\Feature\BootstrapListenerInterface;
 use Laminas\ModuleManager\Feature\ConfigProviderInterface;
+use Laminas\Mvc\ApplicationInterface;
 use Laminas\ServiceManager\ServiceManager;
 
 /**
  * BjyAuthorize Module
- *
- * @author Ben Youngblood <bx.youngblood@gmail.com>
  */
 class Module implements
     BootstrapListenerInterface,
@@ -23,11 +24,11 @@ class Module implements
      */
     public function onBootstrap(EventInterface $event)
     {
-        /* @var $app \Laminas\Mvc\ApplicationInterface */
+        /** @var ApplicationInterface $app */
         $app = $event->getTarget();
         /** @var ServiceManager $serviceManager */
         $serviceManager = $app->getServiceManager();
-        $config = $serviceManager->get('BjyAuthorize\Config');
+        $config         = $serviceManager->get('BjyAuthorize\Config');
         /** @var UnauthorizedStrategy $strategy */
         $strategy = $serviceManager->get($config['unauthorized_strategy']);
         /** @var AbstractGuard[] $guards */

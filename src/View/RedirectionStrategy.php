@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BjyAuthorize\View;
 
 use BjyAuthorize\Exception\UnAuthorizedException;
@@ -14,25 +16,16 @@ use Laminas\Mvc\MvcEvent;
 /**
  * Dispatch error handler, catches exceptions related with authorization and
  * redirects the user agent to a configured location
- *
- * @author Ben Youngblood <bx.youngblood@gmail.com>
- * @author Marco Pivetta  <ocramius@gmail.com>
  */
 class RedirectionStrategy implements ListenerAggregateInterface
 {
-    /**
-     * @var string route to be used to handle redirects
-     */
+    /** @var string route to be used to handle redirects */
     protected $redirectRoute = 'lmcuser/login';
 
-    /**
-     * @var string URI to be used to handle redirects
-     */
+    /** @var string URI to be used to handle redirects */
     protected $redirectUri;
 
-    /**
-     * @var callable[] An array with callback functions or methods.
-     */
+    /** @var callable[] An array with callback functions or methods. */
     protected $listeners = [];
 
     /**
@@ -57,28 +50,27 @@ class RedirectionStrategy implements ListenerAggregateInterface
 
     /**
      * Handles redirects in case of dispatch errors caused by unauthorized access
-     *
-     * @param \Laminas\Mvc\MvcEvent $event
      */
     public function onDispatchError(MvcEvent $event)
     {
         // Do nothing if the result is a response object
-        $result = $event->getResult();
+        $result     = $event->getResult();
         $routeMatch = $event->getRouteMatch();
-        $response = $event->getResponse();
-        $router = $event->getRouter();
-        $error = $event->getError();
-        $url = $this->redirectUri;
+        $response   = $event->getResponse();
+        $router     = $event->getRouter();
+        $error      = $event->getError();
+        $url        = $this->redirectUri;
 
-        if ($result instanceof Response
-            || !$routeMatch
-            || ($response && !$response instanceof Response)
-            || !(
+        if (
+            $result instanceof Response
+            || ! $routeMatch
+            || ($response && ! $response instanceof Response)
+            || ! (
                 Route::ERROR === $error
                 || Controller::ERROR === $error
                 || (
                     Application::ERROR_EXCEPTION === $error
-                    && ($event->getParam('exception') instanceof UnAuthorizedException)
+                    && $event->getParam('exception') instanceof UnAuthorizedException
                 )
             )
         ) {
@@ -102,7 +94,7 @@ class RedirectionStrategy implements ListenerAggregateInterface
      */
     public function setRedirectRoute($redirectRoute)
     {
-        $this->redirectRoute = (string)$redirectRoute;
+        $this->redirectRoute = (string) $redirectRoute;
     }
 
     /**
@@ -110,6 +102,6 @@ class RedirectionStrategy implements ListenerAggregateInterface
      */
     public function setRedirectUri($redirectUri)
     {
-        $this->redirectUri = $redirectUri ? (string)$redirectUri : null;
+        $this->redirectUri = $redirectUri ? (string) $redirectUri : null;
     }
 }

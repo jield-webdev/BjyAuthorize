@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BjyAuthorizeTest\Service;
 
 use BjyAuthorize\Service\Authorize;
@@ -9,8 +11,6 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Test for {@see \BjyAuthorize\Service\AuthorizeFactory}
- *
- * @author Christian Bergau <cbergau86@gmail.com>
  */
 class AuthorizeFactoryTest extends TestCase
 {

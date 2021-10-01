@@ -1,16 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BjyAuthorizeTest\Service;
 
 use BjyAuthorize\Service\AuthenticationIdentityProviderServiceFactory;
 use Interop\Container\ContainerInterface;
+use Laminas\Authentication\AuthenticationService;
 use LmcUser\Service\User;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Factory test for {@see \BjyAuthorize\Service\AuthenticationIdentityProviderServiceFactory}
- *
- * @author Ingo Walz <ingo.walz@googlemail.com>
  */
 class AuthenticationIdentityProviderServiceFactoryTest extends TestCase
 {
@@ -22,12 +23,12 @@ class AuthenticationIdentityProviderServiceFactoryTest extends TestCase
     public function testCreateService()
     {
         $config = [
-            'default_role' => 'test-guest',
+            'default_role'       => 'test-guest',
             'authenticated_role' => 'test-user',
         ];
 
-        $user = $this->getMockBuilder(User::class)->getMock();
-        $auth = $this->createMock('Laminas\\Authentication\\AuthenticationService');
+        $user      = $this->getMockBuilder(User::class)->getMock();
+        $auth      = $this->createMock(AuthenticationService::class);
         $container = $this->createMock(ContainerInterface::class);
 
         $user->expects($this->once())->method('getAuthService')->will($this->returnValue($auth));
@@ -48,7 +49,10 @@ class AuthenticationIdentityProviderServiceFactoryTest extends TestCase
             );
 
         $authenticationFactory = new AuthenticationIdentityProviderServiceFactory();
-        $authentication = $authenticationFactory($container, AuthenticationIdentityProviderServiceFactory::class);
+        $authentication        = $authenticationFactory(
+            $container,
+            AuthenticationIdentityProviderServiceFactory::class
+        );
 
         $this->assertEquals($authentication->getDefaultRole(), 'test-guest');
         $this->assertEquals($authentication->getAuthenticatedRole(), 'test-user');

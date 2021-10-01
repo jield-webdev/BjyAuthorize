@@ -1,46 +1,38 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BjyAuthorize\Provider\Role;
 
 use BjyAuthorize\Acl\Role;
 use Interop\Container\ContainerInterface;
 use Laminas\Db\Sql\Select;
+use Laminas\Db\TableGateway\TableGateway;
+
+use function array_values;
 
 /**
  * Role provider based on a {@see \Laminas\Db\Adaper\Adapter}
- *
- * @author Ben Youngblood <bx.youngblood@gmail.com>
  */
 class LaminasDb implements ProviderInterface
 {
-    /**
-     * @var ContainerInterface
-     */
+    /** @var ContainerInterface */
     protected $serviceLocator;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $tableName = 'user_role';
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $identifierFieldName = 'id';
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $roleIdFieldName = 'role_id';
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $parentRoleFieldName = 'parent_id';
 
     /**
-     * @param                         $options
-     * @param ContainerInterface $serviceLocator
+     * @param array $options Options
      */
     public function __construct($options, ContainerInterface $serviceLocator)
     {
@@ -68,16 +60,16 @@ class LaminasDb implements ProviderInterface
      */
     public function getRoles()
     {
-        /* @var $tableGateway \Laminas\Db\TableGateway\TableGateway */
+        /** @var TableGateway $tableGateway */
         $tableGateway = $this->serviceLocator->get('BjyAuthorize\Service\RoleDbTableGateway');
-        $sql = new Select();
+        $sql          = new Select();
 
         $sql->from($this->tableName);
 
-        /* @var $roles Role[] */
-        $roles = [];
+        /** @var Role[] $roles */
+        $roles       = [];
         $indexedRows = [];
-        $rowset = $tableGateway->selectWith($sql);
+        $rowset      = $tableGateway->selectWith($sql);
 
         // Pass 1: collect all rows and index them by PK
         foreach ($rowset as $row) {
@@ -86,9 +78,9 @@ class LaminasDb implements ProviderInterface
 
         // Pass 2: build a role for each indexed row
         foreach ($indexedRows as $row) {
-            $parentRoleId = isset($row[$this->parentRoleFieldName])
+            $parentRoleId   = isset($row[$this->parentRoleFieldName])
                 ? $indexedRows[$row[$this->parentRoleFieldName]][$this->roleIdFieldName] : null;
-            $roleId = $row[$this->roleIdFieldName];
+            $roleId         = $row[$this->roleIdFieldName];
             $roles[$roleId] = new Role($roleId, $parentRoleId);
         }
 

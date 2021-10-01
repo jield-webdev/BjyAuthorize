@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BjyAuthorizeTest\Service;
 
 use BjyAuthorize\Acl\Role;
@@ -11,6 +13,7 @@ use BjyAuthorize\Service\GuardsServiceFactory;
 use BjyAuthorize\Service\ResourceProvidersServiceFactory;
 use BjyAuthorize\Service\RoleProvidersServiceFactory;
 use BjyAuthorize\Service\RuleProvidersServiceFactory;
+use InvalidArgumentException;
 use Laminas\Cache\Storage\Adapter\Filesystem;
 use Laminas\Permissions\Acl\Acl;
 use Laminas\Permissions\Acl\Resource\GenericResource;
@@ -20,8 +23,6 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Test for {@see \BjyAuthorize\Service\Authorize}
- *
- * @author Christian Bergau <cbergau86@gmail.com>
  */
 class AuthorizeTest extends TestCase
 {
@@ -30,6 +31,7 @@ class AuthorizeTest extends TestCase
 
     /**
      * {@inheritDoc}
+     *
      * @see \PHPUnit\Framework\TestCase::setUp()
      */
     protected function setUp(): void
@@ -68,6 +70,7 @@ class AuthorizeTest extends TestCase
 
     /**
      * {@inheritDoc}
+     *
      * @see \PHPUnit\Framework\TestCase::tearDown()
      */
     protected function tearDown(): void
@@ -120,7 +123,7 @@ class AuthorizeTest extends TestCase
      */
     public function testLoadWritesAclToCacheIfCacheIsEnabledButAclIsNotStoredInCache()
     {
-        $cache = $this->getMockBuilder('Laminas\Cache\Storage\Adapter\Filesystem')
+        $cache = $this->getMockBuilder(Filesystem::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -152,7 +155,6 @@ class AuthorizeTest extends TestCase
         $authorize = new Authorize(['cache_key' => 'acl'], $serviceManager);
         $authorize->load();
     }
-
 
     /**
      * @group bjyoungblood/BjyAuthorize#258
@@ -217,13 +219,12 @@ class AuthorizeTest extends TestCase
         $this->assertTrue($acl->hasResource('test'));
     }
 
-
     /**
      * @group bjyoungblood/BjyAuthorize#258
      */
     public function testCanAddNonTraversableResourceToLoadResourceThrowsInvalidArgumentException()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
 
         $serviceManager = $this->serviceManager;
         $serviceManager->setAllowOverride(true);

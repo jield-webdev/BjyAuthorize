@@ -1,25 +1,24 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BjyAuthorize\Acl;
 
 use BjyAuthorize\Exception;
+use BjyAuthorize\Exception\InvalidRoleException;
 use Laminas\Permissions\Acl\Role\RoleInterface;
+
+use function is_string;
 
 /**
  * Base role object
- *
- * @author Ben Youngblood <bx.youngblood@gmail.com>
  */
 class Role implements RoleInterface, HierarchicalRoleInterface
 {
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $roleId;
 
-    /**
-     * @var RoleInterface
-     */
+    /** @var RoleInterface */
     protected $parent;
 
     /**
@@ -46,12 +45,11 @@ class Role implements RoleInterface, HierarchicalRoleInterface
 
     /**
      * @param string $roleId
-     *
      * @return self
      */
     public function setRoleId($roleId)
     {
-        $this->roleId = (string)$roleId;
+        $this->roleId = (string) $roleId;
 
         return $this;
     }
@@ -66,9 +64,7 @@ class Role implements RoleInterface, HierarchicalRoleInterface
 
     /**
      * @param RoleInterface|string|null $parent
-     *
-     * @throws \BjyAuthorize\Exception\InvalidRoleException
-     *
+     * @throws InvalidRoleException
      * @return self
      */
     public function setParent($parent)

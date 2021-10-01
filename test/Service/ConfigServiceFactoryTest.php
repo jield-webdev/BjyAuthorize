@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BjyAuthorizeTest\Service;
 
 use BjyAuthorize\Service\ConfigServiceFactory;
@@ -8,8 +10,6 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Test for {@see \BjyAuthorize\Service\ConfigServiceFactory}
- *
- * @author Marco Pivetta <ocramius@gmail.com>
  */
 class ConfigServiceFactoryTest extends TestCase
 {
@@ -18,7 +18,7 @@ class ConfigServiceFactoryTest extends TestCase
      */
     public function testInvoke()
     {
-        $factory = new ConfigServiceFactory();
+        $factory   = new ConfigServiceFactory();
         $container = $this->createMock(ContainerInterface::class);
 
         $container

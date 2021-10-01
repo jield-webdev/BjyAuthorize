@@ -1,9 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BjyAuthorizeTest\View;
 
 use BjyAuthorize\Exception\UnAuthorizedException;
 use BjyAuthorize\View\UnauthorizedStrategy;
+use Exception;
 use Laminas\EventManager\EventManagerInterface;
 use Laminas\Http\Response;
 use Laminas\Mvc\Application;
@@ -11,17 +14,14 @@ use Laminas\Mvc\MvcEvent;
 use Laminas\Stdlib\ResponseInterface;
 use Laminas\View\Model\ModelInterface;
 use PHPUnit\Framework\TestCase;
+use UnexpectedValueException;
 
 /**
  * UnauthorizedStrategyTest view strategy test
- *
- * @author Marco Pivetta <ocramius@gmail.com>
  */
 class UnauthorizedStrategyTest extends TestCase
 {
-    /**
-     * @var UnauthorizedStrategy
-     */
+    /** @var UnauthorizedStrategy */
     protected $strategy;
 
     /**
@@ -105,10 +105,10 @@ class UnauthorizedStrategyTest extends TestCase
             ->method('addChild')
             ->will(
                 $this->returnCallback(
-                    function (ModelInterface $model) use ($test) {
+                    function (ModelInterface $model) {
                         // using a return callback because of a bug in HHVM
                         if ('template/name' !== $model->getTemplate()) {
-                            throw new \UnexpectedValueException('Template name does not match expectations!');
+                            throw new UnexpectedValueException('Template name does not match expectations!');
                         }
                     }
                 )
@@ -118,10 +118,10 @@ class UnauthorizedStrategyTest extends TestCase
             ->method('setResponse')
             ->will(
                 $this->returnCallback(
-                    function (Response $response) use ($test) {
+                    function (Response $response) {
                         // using a return callback because of a bug in HHVM
                         if (403 !== $response->getStatusCode()) {
-                            throw new \UnexpectedValueException('Response code not match expectations!');
+                            throw new UnexpectedValueException('Response code not match expectations!');
                         }
                     }
                 )
@@ -135,7 +135,7 @@ class UnauthorizedStrategyTest extends TestCase
      */
     public function testIgnoresUnknownExceptions()
     {
-        $exception = $this->createMock(\Exception::class);
+        $exception = $this->createMock(Exception::class);
         $viewModel = $this->createMock(ModelInterface::class);
         $mvcEvent  = $this->createMock(MvcEvent::class);
 
@@ -180,7 +180,7 @@ class UnauthorizedStrategyTest extends TestCase
      */
     public function testIgnoresOnExistingResponse()
     {
-        $response = $this->createMock(ResponseInterface::class);
+        $response  = $this->createMock(ResponseInterface::class);
         $viewModel = $this->createMock(ModelInterface::class);
         $mvcEvent  = $this->createMock(MvcEvent::class);
 

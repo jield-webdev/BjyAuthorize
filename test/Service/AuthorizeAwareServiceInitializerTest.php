@@ -1,43 +1,39 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BjyAuthorizeTest\Service;
 
 use BjyAuthorize\Service\Authorize;
 use BjyAuthorize\Service\AuthorizeAwareInterface;
 use BjyAuthorize\Service\AuthorizeAwareServiceInitializer;
 use Interop\Container\ContainerInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Test for {@see \BjyAuthorize\Service\AuthorizeAwareServiceInitializer}
- *
- * @author Marco Pivetta <ocramius@gmail.com>
  */
 class AuthorizeAwareServiceInitializerTest extends TestCase
 {
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
-     */
+    /** @var MockObject */
     protected $authorize;
 
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
-     */
+    /** @var MockObject */
     protected $container;
 
-    /**
-     * @var \BjyAuthorize\Service\AuthorizeAwareServiceInitializer
-     */
+    /** @var AuthorizeAwareServiceInitializer */
     protected $initializer;
 
     /**
      * {@inheritDoc}
+     *
      * @see \PHPUnit\Framework\TestCase::setUp()
      */
     protected function setUp(): void
     {
-        $this->authorize = $this->getMockBuilder(Authorize::class)->disableOriginalConstructor()->getMock();
-        $this->container = $this->createMock(ContainerInterface::class);
+        $this->authorize   = $this->getMockBuilder(Authorize::class)->disableOriginalConstructor()->getMock();
+        $this->container   = $this->createMock(ContainerInterface::class);
         $this->initializer = new AuthorizeAwareServiceInitializer();
 
         $this->container->expects($this->any())->method('get')->will($this->returnValue($this->authorize));
@@ -45,6 +41,7 @@ class AuthorizeAwareServiceInitializerTest extends TestCase
 
     /**
      * {@inheritDoc}
+     *
      * @see \PHPUnit\Framework\TestCase::tearDown()
      */
     protected function tearDown(): void

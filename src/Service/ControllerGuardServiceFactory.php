@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BjyAuthorize\Service;
 
 use BjyAuthorize\Guard\Controller;
@@ -8,16 +10,15 @@ use Laminas\ServiceManager\Factory\FactoryInterface;
 
 /**
  * Factory responsible of instantiating {@see \BjyAuthorize\Guard\Controller}
- *
- * @author Marco Pivetta <ocramius@gmail.com>
  */
 class ControllerGuardServiceFactory implements FactoryInterface
 {
     /**
      * {@inheritDoc}
+     *
      * @see \Laminas\ServiceManager\Factory\FactoryInterface::__invoke()
      */
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)
     {
         return new Controller(
             $container->get('BjyAuthorize\Config')['guards'][Controller::class],

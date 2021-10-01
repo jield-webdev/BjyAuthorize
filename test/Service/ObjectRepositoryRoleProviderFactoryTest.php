@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BjyAuthorizeTest\Service;
 
 use BjyAuthorize\Provider\Role\ObjectRepositoryProvider;
@@ -11,8 +13,6 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * {@see \BjyAuthorize\Service\ObjectRepositoryRoleProviderFactory} test
- *
- * @author Tom Oram <tom@scl.co.uk>
  */
 class ObjectRepositoryRoleProviderFactoryTest extends TestCase
 {
@@ -21,10 +21,10 @@ class ObjectRepositoryRoleProviderFactoryTest extends TestCase
      */
     public function testInvoke()
     {
-        $container = $this->createMock(ContainerInterface::class);
+        $container     = $this->createMock(ContainerInterface::class);
         $entityManager = $this->createMock(ObjectManager::class);
-        $repository = $this->createMock(ObjectRepository::class);
-        $factory = new ObjectRepositoryRoleProviderFactory();
+        $repository    = $this->createMock(ObjectRepository::class);
+        $factory       = new ObjectRepositoryRoleProviderFactory();
 
         $testClassName = 'TheTestClass';
 
@@ -32,7 +32,7 @@ class ObjectRepositoryRoleProviderFactoryTest extends TestCase
             'role_providers' => [
                 ObjectRepositoryProvider::class => [
                     'role_entity_class' => $testClassName,
-                    'object_manager' => 'doctrine.entitymanager.orm_default',
+                    'object_manager'    => 'doctrine.entitymanager.orm_default',
                 ],
             ],
         ];

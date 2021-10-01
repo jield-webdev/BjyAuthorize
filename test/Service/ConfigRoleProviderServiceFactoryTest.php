@@ -1,16 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BjyAuthorizeTest\Service;
 
-use \PHPUnit\Framework\TestCase;
-use BjyAuthorize\Service\ConfigRoleProviderServiceFactory;
 use BjyAuthorize\Provider\Role\Config;
+use BjyAuthorize\Service\ConfigRoleProviderServiceFactory;
 use Interop\Container\ContainerInterface;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Test for {@see \BjyAuthorize\Service\ConfigRoleProviderServiceFactory}
- *
- * @author Marco Pivetta <ocramius@gmail.com>
  */
 class ConfigRoleProviderServiceFactoryTest extends TestCase
 {
@@ -19,9 +19,9 @@ class ConfigRoleProviderServiceFactoryTest extends TestCase
      */
     public function testInvoke()
     {
-        $factory = new ConfigRoleProviderServiceFactory();
+        $factory   = new ConfigRoleProviderServiceFactory();
         $container = $this->createMock(ContainerInterface::class);
-        $config = [
+        $config    = [
             'role_providers' => [
                 Config::class => [],
             ],
@@ -33,7 +33,7 @@ class ConfigRoleProviderServiceFactoryTest extends TestCase
             ->with('BjyAuthorize\Config')
             ->will($this->returnValue($config));
 
-        $guard = $factory($container,ConfigRoleProviderServiceFactory::class);
+        $guard = $factory($container, ConfigRoleProviderServiceFactory::class);
 
         $this->assertInstanceOf(Config::class, $guard);
     }

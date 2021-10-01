@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BjyAuthorizeTest\Guard;
 
 use BjyAuthorize\Exception\UnAuthorizedException;
@@ -13,28 +15,21 @@ use Laminas\Mvc\Application;
 use Laminas\Mvc\MvcEvent;
 use Laminas\Router\RouteMatch;
 use Laminas\ServiceManager\ServiceLocatorInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Controller Guard test
- *
- * @author Marco Pivetta <ocramius@gmail.com>
  */
 class ControllerTest extends TestCase
 {
-    /**
-     * @var \Laminas\ServiceManager\ServiceLocatorInterface|\PHPUnit\Framework\MockObject\MockObject
-     */
+    /** @var ServiceLocatorInterface|MockObject */
     protected $serviceLocator;
 
-    /**
-     * @var \BjyAuthorize\Service\Authorize|\PHPUnit\Framework\MockObject\MockObject
-     */
+    /** @var Authorize|MockObject */
     protected $authorize;
 
-    /**
-     * @var Controller
-     */
+    /** @var Controller */
     protected $controllerGuard;
 
     /**
@@ -47,7 +42,7 @@ class ControllerTest extends TestCase
         parent::setUp();
 
         $this->serviceLocator  = $locator = $this->createMock(ServiceLocatorInterface::class);
-        $this->authorize = $authorize = $this->getMockBuilder(Authorize::class)
+        $this->authorize       = $authorize = $this->getMockBuilder(Authorize::class)
             ->disableOriginalConstructor()
             ->getMock();
         $this->controllerGuard = new Controller([], $this->serviceLocator);
@@ -92,11 +87,9 @@ class ControllerTest extends TestCase
 
     /**
      * @dataProvider controllersRulesProvider
-     *
      * @covers \BjyAuthorize\Guard\Controller::__construct
      * @covers \BjyAuthorize\Guard\Controller::getResources
      * @covers \BjyAuthorize\Guard\Controller::getRules
-     *
      * @param array     $rule
      * @param int       $expectedCount
      * @param string    $resource
@@ -119,10 +112,8 @@ class ControllerTest extends TestCase
 
     /**
      * @dataProvider controllersRulesWithAssertionProvider
-     *
      * @covers \BjyAuthorize\Guard\Controller::__construct
      * @covers \BjyAuthorize\Guard\Controller::getRules
-     *
      * @param array     $rule
      * @param int       $expectedCount
      * @param string    $resource
@@ -272,13 +263,13 @@ class ControllerTest extends TestCase
      */
     public function testOnDispatchWithInvalidResourceConsole()
     {
-        $event = $this->getMockBuilder(MvcEvent::class)
+        $event      = $this->getMockBuilder(MvcEvent::class)
             ->disableOriginalConstructor()
             ->getMock();
         $routeMatch = $this->getMockBuilder(RouteMatch::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $request = $this->getMockBuilder(ConsoleRequest::class)
+        $request    = $this->getMockBuilder(ConsoleRequest::class)
             ->disableOriginalConstructor()
             ->getMock();
         $event->method('getRouteMatch')->willReturn($routeMatch);
@@ -291,22 +282,21 @@ class ControllerTest extends TestCase
      * @param string|null $controller
      * @param string|null $action
      * @param string|null $method
-     *
-     * @return \PHPUnit\Framework\MockObject\MockObject|\Laminas\Mvc\MvcEvent
+     * @return MockObject|MvcEvent
      */
     private function createMvcEvent($controller = null, $action = null, $method = null)
     {
         $eventManager = $this->getMockBuilder(EventManagerInterface::class)
             ->getMock();
-        $application = $this->getMockBuilder(Application::class)
+        $application  = $this->getMockBuilder(Application::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $event = $this->getMockBuilder(MvcEvent::class)
+        $event        = $this->getMockBuilder(MvcEvent::class)
             ->getMock();
-        $routeMatch = $this->getMockBuilder(RouteMatch::class)
+        $routeMatch   = $this->getMockBuilder(RouteMatch::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $request = $this->getMockBuilder(HttpRequest::class)
+        $request      = $this->getMockBuilder(HttpRequest::class)
             ->getMock();
 
         $event->expects($this->any())->method('getRouteMatch')->will($this->returnValue($routeMatch));
@@ -356,7 +346,7 @@ class ControllerTest extends TestCase
                 ],
                 1,
                 'controller/test-controller:test-action',
-                ['admin', 'user']
+                ['admin', 'user'],
             ],
             [
                 [
@@ -368,17 +358,17 @@ class ControllerTest extends TestCase
                 ],
                 1,
                 'controller/test2-controller',
-                ['admin2', 'user2']
+                ['admin2', 'user2'],
             ],
             [
                 [
                     'controller' => 'test3-controller',
                     'action'     => 'test3-action',
-                    'roles'      => 'admin3'
+                    'roles'      => 'admin3',
                 ],
                 1,
                 'controller/test3-controller:test3-action',
-                ['admin3']
+                ['admin3'],
             ],
             [
                 [
@@ -394,7 +384,7 @@ class ControllerTest extends TestCase
                 ],
                 2,
                 'controller/test4-controller:test4-action',
-                ['admin4', 'user3']
+                ['admin4', 'user3'],
             ],
             [
                 [
@@ -410,17 +400,17 @@ class ControllerTest extends TestCase
                 ],
                 2,
                 'controller/test4-controller:test5-action',
-                ['admin4', 'user3']
+                ['admin4', 'user3'],
             ],
             [
                 [
                     'controller' => 'test5-controller',
                     'action'     => null,
-                    'roles'      => 'user4'
+                    'roles'      => 'user4',
                 ],
                 1,
                 'controller/test5-controller',
-                ['user4']
+                ['user4'],
             ],
             [
                 [
@@ -429,11 +419,11 @@ class ControllerTest extends TestCase
                         'test7-controller',
                     ],
                     'action'     => null,
-                    'roles'      => 'user5'
+                    'roles'      => 'user5',
                 ],
                 2,
                 'controller/test6-controller',
-                ['user5']
+                ['user5'],
             ],
             [
                 [
@@ -442,11 +432,11 @@ class ControllerTest extends TestCase
                         'test7-controller',
                     ],
                     'action'     => null,
-                    'roles'      => 'user5'
+                    'roles'      => 'user5',
                 ],
                 2,
                 'controller/test7-controller',
-                ['user5']
+                ['user5'],
             ],
             [
                 [
@@ -465,7 +455,7 @@ class ControllerTest extends TestCase
                 ],
                 4,
                 'controller/test6-controller:test6-action',
-                ['admin5', 'user6']
+                ['admin5', 'user6'],
             ],
             [
                 [
@@ -484,8 +474,8 @@ class ControllerTest extends TestCase
                 ],
                 4,
                 'controller/test7-controller:test7-action',
-                ['admin5', 'user6']
-            ]
+                ['admin5', 'user6'],
+            ],
         ];
     }
 
@@ -506,12 +496,12 @@ class ControllerTest extends TestCase
                         'admin',
                         'user',
                     ],
-                    'assertion' => 'test-assertion'
+                    'assertion'  => 'test-assertion',
                 ],
                 1,
                 'controller/test-controller:test-action',
                 ['admin', 'user'],
-                'test-assertion'
+                'test-assertion',
             ],
             [
                 [
@@ -527,13 +517,13 @@ class ControllerTest extends TestCase
                         'admin5',
                         'user6',
                     ],
-                    'assertion' => 'test-assertion'
+                    'assertion'  => 'test-assertion',
                 ],
                 4,
                 'controller/test6-controller:test6-action',
                 ['admin5', 'user6'],
-                'test-assertion'
-            ]
+                'test-assertion',
+            ],
         ];
     }
 }

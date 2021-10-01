@@ -1,27 +1,26 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BjyAuthorizeTest\Provider\Role;
 
+use BjyAuthorize\Acl\HierarchicalRoleInterface;
 use BjyAuthorize\Acl\Role;
 use BjyAuthorize\Provider\Role\ObjectRepositoryProvider;
 use Doctrine\Persistence\ObjectRepository;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use stdClass;
 
 /**
  * {@see \BjyAuthorize\Provider\Role\ObjectRepositoryProvider} test
- *
- * @author Tom Oram <tom@scl.co.uk>
  */
 class ObjectRepositoryProviderTest extends TestCase
 {
-    /**
-     * @var \BjyAuthorize\Provider\Role\ObjectRepositoryProvider
-     */
+    /** @var ObjectRepositoryProvider */
     private $provider;
 
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
-     */
+    /** @var MockObject */
     private $repository;
 
     /**
@@ -30,18 +29,17 @@ class ObjectRepositoryProviderTest extends TestCase
     protected function setUp(): void
     {
         $this->repository = $this->createMock(ObjectRepository::class);
-        $this->provider = new ObjectRepositoryProvider($this->repository);
+        $this->provider   = new ObjectRepositoryProvider($this->repository);
     }
 
     /**
      * @param string $name
      * @param string $parent
-     *
-     * @return \PHPUnit\Framework\MockObject\MockObject|\BjyAuthorize\Acl\HierarchicalRoleInterface
+     * @return MockObject|HierarchicalRoleInterface
      */
     private function createRoleMock($name, $parent)
     {
-        $role = $this->createMock('BjyAuthorize\Acl\HierarchicalRoleInterface');
+        $role = $this->createMock(HierarchicalRoleInterface::class);
         $role->expects($this->atLeastOnce())
             ->method('getRoleId')
             ->will($this->returnValue($name));
@@ -60,9 +58,9 @@ class ObjectRepositoryProviderTest extends TestCase
     {
         // Set up mocks
         $roles = [
-            new \stdClass(), // to be skipped
+            new stdClass(), // to be skipped
             $this->createRoleMock('role1', null),
-            $this->createRoleMock('role2', null)
+            $this->createRoleMock('role2', null),
         ];
 
         $this->repository->expects($this->once())
@@ -88,7 +86,7 @@ class ObjectRepositoryProviderTest extends TestCase
         $roles = [
             $role1,
             $this->createRoleMock('role2', null),
-            $this->createRoleMock('role3', $role1)
+            $this->createRoleMock('role3', $role1),
         ];
 
         $this->repository->expects($this->once())
@@ -97,7 +95,7 @@ class ObjectRepositoryProviderTest extends TestCase
 
         // Set up the expected outcome
         $expectedRole1 = new Role('role1', null);
-        $expects = [
+        $expects       = [
             $expectedRole1,
             new Role('role2', null),
             new Role('role3', $expectedRole1),
