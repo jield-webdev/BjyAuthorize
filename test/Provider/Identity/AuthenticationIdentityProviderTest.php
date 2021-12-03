@@ -1,29 +1,26 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BjyAuthorizeTest\Provider\Identity;
 
-use BjyAuthorize\Provider\Identity\AuthenticationIdentityProvider;
-use Laminas\Authentication\AuthenticationService;
-use PHPUnit\Framework\TestCase;
-use Laminas\Permissions\Acl\Role\RoleInterface;
-use BjyAuthorize\Provider\Role\ProviderInterface;
 use BjyAuthorize\Exception\InvalidRoleException;
+use BjyAuthorize\Provider\Identity\AuthenticationIdentityProvider;
+use BjyAuthorize\Provider\Role\ProviderInterface;
+use Laminas\Authentication\AuthenticationService;
+use Laminas\Permissions\Acl\Role\RoleInterface;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 
 /**
  * {@see \BjyAuthorize\Provider\Identity\AuthenticationIdentityProvider} test
- *
- * @author Ingo Walz <ingo.walz@googlemail.com>
  */
 class AuthenticationIdentityProviderTest extends TestCase
 {
-    /**
-     * @var \Laminas\Authentication\AuthenticationService|\PHPUnit\Framework\MockObject\MockObject
-     */
+    /** @var AuthenticationService|MockObject */
     protected $authService;
 
-    /**
-     * @var \BjyAuthorize\Provider\Identity\AuthenticationIdentityProvider
-     */
+    /** @var AuthenticationIdentityProvider */
     protected $provider;
 
     /**
@@ -34,7 +31,7 @@ class AuthenticationIdentityProviderTest extends TestCase
     protected function setUp(): void
     {
         $this->authService = $this->createMock(AuthenticationService::class);
-        $this->provider = new AuthenticationIdentityProvider($this->authService);
+        $this->provider    = new AuthenticationIdentityProvider($this->authService);
     }
 
     /**
@@ -98,7 +95,7 @@ class AuthenticationIdentityProviderTest extends TestCase
     {
         $role1 = $this->createMock(RoleInterface::class);
         $role2 = $this->createMock(RoleInterface::class);
-        $user = $this->createMock(ProviderInterface::class);
+        $user  = $this->createMock(ProviderInterface::class);
 
         $user->expects($this->once())
             ->method('getRoles')

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BjyAuthorizeTest\Provider\Identity;
 
 use BjyAuthorize\Exception\InvalidRoleException;
@@ -8,33 +10,24 @@ use Laminas\Authentication\AuthenticationService;
 use Laminas\Db\TableGateway\TableGateway;
 use Laminas\Permissions\Acl\Role\RoleInterface;
 use LmcUser\Service\User;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 /**
  * {@see \BjyAuthorize\Provider\Identity\LmcUserLaminasDb} test
- *
- * @author Marco Pivetta <ocramius@gmail.com>
  */
 class LmcUserLaminasDbTest extends TestCase
 {
-    /**
-     * @var \Laminas\Authentication\AuthenticationService|\PHPUnit\Framework\MockObject\MockObject
-     */
+    /** @var AuthenticationService|MockObject */
     protected $authService;
 
-    /**
-     * @var \LmcUser\Service\User|\PHPUnit\Framework\MockObject\MockObject
-     */
+    /** @var User|MockObject */
     protected $userService;
 
-    /**
-     * @var \Laminas\Db\TableGateway\TableGateway|\PHPUnit\Framework\MockObject\MockObject
-     */
+    /** @var TableGateway|MockObject */
     private $tableGateway;
 
-    /**
-     * @var \BjyAuthorize\Provider\Identity\LmcUserLaminasDb
-     */
+    /** @var LmcUserLaminasDb */
     protected $provider;
 
     /**
@@ -44,8 +37,8 @@ class LmcUserLaminasDbTest extends TestCase
      */
     protected function setUp(): void
     {
-        $this->authService = $this->createMock(AuthenticationService::class);
-        $this->userService = $this->getMockBuilder(User::class)->getMock();
+        $this->authService  = $this->createMock(AuthenticationService::class);
+        $this->userService  = $this->getMockBuilder(User::class)->getMock();
         $this->tableGateway = $this->getMockBuilder(TableGateway::class)
             ->disableOriginalConstructor()
             ->getMock();

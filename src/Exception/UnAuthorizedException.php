@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BjyAuthorize\Exception;
+
+use BadMethodCallException;
 
 /**
  * Exception to be thrown in case of unauthorized access to a resource
- *
- * @author Ben Youngblood <bx.youngblood@gmail.com>
  */
-class UnAuthorizedException extends \BadMethodCallException
+class UnAuthorizedException extends BadMethodCallException
 {
 }

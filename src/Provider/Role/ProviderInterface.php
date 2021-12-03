@@ -1,16 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BjyAuthorize\Provider\Role;
+
+use Laminas\Permissions\Acl\Role\RoleInterface;
 
 /**
  * Role provider interface, provides existing roles list
- *
- * @author Ben Youngblood <bx.youngblood@gmail.com>
  */
 interface ProviderInterface
 {
     /**
-     * @return \Laminas\Permissions\Acl\Role\RoleInterface[]
+     * @return RoleInterface[]
      */
     public function getRoles();
 }

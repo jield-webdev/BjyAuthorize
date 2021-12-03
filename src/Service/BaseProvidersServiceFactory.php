@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BjyAuthorize\Service;
 
 use Interop\Container\ContainerInterface;
@@ -7,20 +9,20 @@ use Laminas\ServiceManager\Factory\FactoryInterface;
 
 /**
  * Base factory responsible of instantiating providers
- *
- * @author Marco Pivetta <ocramius@gmail.com>
  */
+// phpcs:ignore WebimpressCodingStandard.NamingConventions.AbstractClass.Prefix
 abstract class BaseProvidersServiceFactory implements FactoryInterface
 {
-    const PROVIDER_SETTING = 'providers';
+    public const PROVIDER_SETTING = 'providers';
 
     /**
      * {@inheritDoc}
+     *
      * @see \Laminas\ServiceManager\Factory\FactoryInterface::__invoke()
      */
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)
     {
-        $config = $container->get('BjyAuthorize\Config');
+        $config    = $container->get('BjyAuthorize\Config');
         $providers = [];
 
         foreach ($config[static::PROVIDER_SETTING] as $providerName => $providerConfig) {

@@ -1,17 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BjyAuthorize\Provider\Rule;
 
 /**
  * Rule provider based on a given array of rules
- *
- * @author Ben Youngblood <bx.youngblood@gmail.com>
  */
 class Config implements ProviderInterface
 {
-    /**
-     * @var array
-     */
+    /** @var array */
     protected $rules = [];
 
     /**

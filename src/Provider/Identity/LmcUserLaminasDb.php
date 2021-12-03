@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BjyAuthorize\Provider\Identity;
 
 use BjyAuthorize\Exception\InvalidRoleException;
@@ -8,41 +10,29 @@ use Laminas\Db\TableGateway\TableGateway;
 use Laminas\Permissions\Acl\Role\RoleInterface;
 use LmcUser\Service\User;
 
+use function is_string;
+
 /**
  * Identity provider based on {@see \Laminas\Db\Adapter\Adapter}
- *
- * @author Ben Youngblood <bx.youngblood@gmail.com>
  */
 class LmcUserLaminasDb implements ProviderInterface
 {
-    /**
-     * @var User
-     */
+    /** @var User */
     protected $userService;
 
-    /**
-     * @var string|\Laminas\Permissions\Acl\Role\RoleInterface
-     */
+    /** @var string|RoleInterface */
     protected $defaultRole;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $tableName = 'user_role_linker';
 
-    /**
-     * @var \Laminas\Db\TableGateway\TableGateway
-     */
+    /** @var TableGateway */
     private $tableGateway;
 
-    /**
-     * @param \Laminas\Db\TableGateway\TableGateway $tableGateway
-     * @param \LmcUser\Service\User $userService
-     */
     public function __construct(TableGateway $tableGateway, User $userService)
     {
         $this->tableGateway = $tableGateway;
-        $this->userService = $userService;
+        $this->userService  = $userService;
     }
 
     /**
@@ -52,7 +42,7 @@ class LmcUserLaminasDb implements ProviderInterface
     {
         $authService = $this->userService->getAuthService();
 
-        if (!$authService->hasIdentity()) {
+        if (! $authService->hasIdentity()) {
             return [$this->getDefaultRole()];
         }
 
@@ -76,7 +66,7 @@ class LmcUserLaminasDb implements ProviderInterface
     }
 
     /**
-     * @return string|\Laminas\Permissions\Acl\Role\RoleInterface
+     * @return string|RoleInterface
      */
     public function getDefaultRole()
     {
@@ -84,13 +74,12 @@ class LmcUserLaminasDb implements ProviderInterface
     }
 
     /**
-     * @param string|\Laminas\Permissions\Acl\Role\RoleInterface $defaultRole
-     *
-     * @throws \BjyAuthorize\Exception\InvalidRoleException
+     * @param string|RoleInterface $defaultRole
+     * @throws InvalidRoleException
      */
     public function setDefaultRole($defaultRole)
     {
-        if (!($defaultRole instanceof RoleInterface || is_string($defaultRole))) {
+        if (! ($defaultRole instanceof RoleInterface || is_string($defaultRole))) {
             throw InvalidRoleException::invalidRoleInstance($defaultRole);
         }
 

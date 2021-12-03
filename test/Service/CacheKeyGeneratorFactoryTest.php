@@ -1,15 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BjyAuthorizeTest\Service;
 
 use BjyAuthorize\Service\CacheKeyGeneratorFactory;
 use Interop\Container\ContainerInterface;
 use PHPUnit\Framework\TestCase;
 
+use function is_callable;
+
 /**
  * PHPUnit tests for {@see \BjyAuthorize\Service\CacheKeyGeneratorFactory}
- *
- * @author Steve Rhoades <sedonami@gmail.com>
  */
 class CacheKeyGeneratorFactoryTest extends TestCase
 {
@@ -19,7 +21,7 @@ class CacheKeyGeneratorFactoryTest extends TestCase
     public function testInvokeReturnsDefaultCallable()
     {
         $container = $this->createMock(ContainerInterface::class);
-        $config = [];
+        $config    = [];
 
         $container
             ->expects($this->any())
@@ -40,8 +42,8 @@ class CacheKeyGeneratorFactoryTest extends TestCase
     public function testInvokeReturnsCacheKeyGeneratorCallable()
     {
         $container = $this->createMock(ContainerInterface::class);
-        $config = [
-            'cache_key' => 'some_new_value'
+        $config    = [
+            'cache_key' => 'some_new_value',
         ];
 
         $container

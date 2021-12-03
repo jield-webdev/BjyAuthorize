@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BjyAuthorizeTest\Service;
 
 use BjyAuthorize\Guard\Route;
@@ -10,8 +12,6 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Test for {@see \BjyAuthorize\Service\RouteGuardServiceFactory}
- *
- * @author Marco Pivetta <ocramius@gmail.com>
  */
 class RouteGuardServiceFactoryTest extends TestCase
 {
@@ -20,9 +20,9 @@ class RouteGuardServiceFactoryTest extends TestCase
      */
     public function testInvoke()
     {
-        $factory = new RouteGuardServiceFactory();
+        $factory   = new RouteGuardServiceFactory();
         $container = $this->createMock(ContainerInterface::class);
-        $config = [
+        $config    = [
             'guards' => [
                 Route::class => [],
             ],

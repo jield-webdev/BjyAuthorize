@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BjyAuthorizeTest\Service;
 
 use BjyAuthorize\Service\CacheFactory;
@@ -9,8 +11,6 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * PHPUnit tests for {@see \BjyAuthorize\Service\CacheFactory}
- *
- * @author Christian Bergau <cbergau86@gmail.com>
  */
 class CacheFactoryTest extends TestCase
 {
@@ -20,15 +20,15 @@ class CacheFactoryTest extends TestCase
     public function testInvoke()
     {
         $container = $this->createMock(ContainerInterface::class);
-        $config = [
+        $config    = [
             'cache_options' => [
                 'adapter' => [
                     'name' => 'memory',
                 ],
                 'plugins' => [
                     'serializer',
-                ]
-            ]
+                ],
+            ],
         ];
 
         $container

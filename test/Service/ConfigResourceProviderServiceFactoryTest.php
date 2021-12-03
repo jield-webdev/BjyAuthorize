@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BjyAuthorizeTest\Service;
 
 use BjyAuthorize\Provider\Resource\Config;
@@ -9,8 +11,6 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Test for {@see \BjyAuthorize\Service\ConfigResourceProviderServiceFactory}
- *
- * @author Marco Pivetta <ocramius@gmail.com>
  */
 class ConfigResourceProviderServiceFactoryTest extends TestCase
 {
@@ -19,9 +19,9 @@ class ConfigResourceProviderServiceFactoryTest extends TestCase
      */
     public function testInvoke()
     {
-        $factory = new ConfigResourceProviderServiceFactory();
+        $factory   = new ConfigResourceProviderServiceFactory();
         $container = $this->createMock(ContainerInterface::class);
-        $config = [
+        $config    = [
             'resource_providers' => [
                 Config::class => [],
             ],

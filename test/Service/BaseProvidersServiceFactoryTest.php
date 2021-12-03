@@ -1,16 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BjyAuthorizeTest\Service;
 
-use \PHPUnit\Framework\TestCase;
-use Interop\Container\ContainerInterface;
-use BjyAuthorize\Service\BaseProvidersServiceFactory;
 use BjyAuthorize\Provider\Resource\ProviderInterface;
+use BjyAuthorize\Service\BaseProvidersServiceFactory;
+use BjyAuthorizeTest\Service\MockProvider;
+use Interop\Container\ContainerInterface;
+use PHPUnit\Framework\TestCase;
+
+use function array_filter;
+use function array_shift;
+use function in_array;
 
 /**
  * Test for {@see \BjyAuthorize\Service\ResourceProvidersServiceFactory}
- *
- * @author Marco Pivetta <ocramius@gmail.com>
  */
 class BaseProvidersServiceFactoryTest extends TestCase
 {
@@ -19,14 +24,14 @@ class BaseProvidersServiceFactoryTest extends TestCase
      */
     public function testInvoke()
     {
-        $factory = $this->getMockForAbstractClass(BaseProvidersServiceFactory::class);
+        $factory   = $this->getMockForAbstractClass(BaseProvidersServiceFactory::class);
         $container = $this->createMock(ContainerInterface::class);
-        $foo = $this->createMock(ProviderInterface::class);
-        $bar = $this->createMock(ProviderInterface::class);
-        $config = [
+        $foo       = $this->createMock(ProviderInterface::class);
+        $bar       = $this->createMock(ProviderInterface::class);
+        $config    = [
             'providers' => [
-                'foo' => [],
-                'bar' => [],
+                'foo'                            => [],
+                'bar'                            => [],
                 __NAMESPACE__ . '\\MockProvider' => ['option' => 'value'],
             ],
         ];
@@ -77,7 +82,7 @@ class BaseProvidersServiceFactoryTest extends TestCase
 
         $this->assertCount(1, $invokableProvider);
 
-        /* @var $invokableGuard \BjyAuthorizeTest\Service\MockProvider */
+        /** @var MockProvider $invokableProvider */
         $invokableProvider = array_shift($invokableProvider);
 
         $this->assertInstanceOf(__NAMESPACE__ . '\\MockProvider', $invokableProvider);

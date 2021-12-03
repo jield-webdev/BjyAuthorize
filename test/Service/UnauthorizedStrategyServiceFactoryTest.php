@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BjyAuthorizeTest\Service;
 
 use BjyAuthorize\Service\UnauthorizedStrategyServiceFactory;
@@ -9,8 +11,6 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Test for {@see \BjyAuthorize\Service\UnauthorizedStrategyServiceFactory}
- *
- * @author Marco Pivetta <ocramius@gmail.com>
  */
 class UnauthorizedStrategyServiceFactoryTest extends TestCase
 {
@@ -19,9 +19,9 @@ class UnauthorizedStrategyServiceFactoryTest extends TestCase
      */
     public function testInvoke()
     {
-        $factory = new UnauthorizedStrategyServiceFactory();
+        $factory            = new UnauthorizedStrategyServiceFactory();
         $containerInterface = $this->createMock(ContainerInterface::class);
-        $config = [
+        $config             = [
             'template' => 'foo/bar',
         ];
 

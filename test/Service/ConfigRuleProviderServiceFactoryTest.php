@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BjyAuthorizeTest\Service;
 
 use BjyAuthorize\Provider\Rule\Config;
@@ -9,8 +11,6 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Test for {@see \BjyAuthorize\Service\ConfigRuleProviderServiceFactory}
- *
- * @author Marco Pivetta <ocramius@gmail.com>
  */
 class ConfigRuleProviderServiceFactoryTest extends TestCase
 {
@@ -19,9 +19,9 @@ class ConfigRuleProviderServiceFactoryTest extends TestCase
      */
     public function testInvoke()
     {
-        $factory = new ConfigRuleProviderServiceFactory();
+        $factory   = new ConfigRuleProviderServiceFactory();
         $container = $this->createMock(ContainerInterface::class);
-        $config = ['rule_providers' => [Config::class => []]];
+        $config    = ['rule_providers' => [Config::class => []]];
 
         $container
             ->expects($this->any())

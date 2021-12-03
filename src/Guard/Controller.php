@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BjyAuthorize\Guard;
 
 use BjyAuthorize\Exception\UnAuthorizedException;
@@ -7,27 +9,33 @@ use BjyAuthorize\Service\Authorize;
 use Laminas\Console\Request as ConsoleRequest;
 use Laminas\EventManager\EventManagerInterface;
 use Laminas\Http\Request as HttpRequest;
+use Laminas\Mvc\ApplicationInterface;
 use Laminas\Mvc\MvcEvent;
+
+use function class_exists;
+use function sprintf;
+use function strtolower;
 
 /**
  * Controller Guard listener, allows checking of permissions
  * during {@see \Laminas\Mvc\MvcEvent::EVENT_DISPATCH}
- *
- * @author Ben Youngblood <bx.youngblood@gmail.com>
  */
 class Controller extends AbstractGuard
 {
     /**
      * Marker for invalid route errors
      */
-    const ERROR = 'error-unauthorized-controller';
+    public const ERROR = 'error-unauthorized-controller';
 
+    /**
+     * @return array
+     */
     protected function extractResourcesFromRule(array $rule)
     {
-        $results = [];
-        $rule['action'] = isset($rule['action']) ? (array)$rule['action'] : [null];
+        $results        = [];
+        $rule['action'] = isset($rule['action']) ? (array) $rule['action'] : [null];
 
-        foreach ((array)$rule['controller'] as $controller) {
+        foreach ((array) $rule['controller'] as $controller) {
             foreach ($rule['action'] as $action) {
                 $results[] = $this->getResourceName($controller, $action);
             }
@@ -49,7 +57,6 @@ class Controller extends AbstractGuard
      *
      * @param string $controller
      * @param string $action
-     *
      * @return string
      */
     public function getResourceName($controller, $action = null)
@@ -65,19 +72,17 @@ class Controller extends AbstractGuard
      * Event callback to be triggered on dispatch, causes application error triggering
      * in case of failed authorization check
      *
-     * @param MvcEvent $event
-     *
      * @return mixed
      */
     public function onDispatch(MvcEvent $event)
     {
-        /* @var $service \BjyAuthorize\Service\Authorize */
-        $service = $this->container->get(Authorize::class);
-        $match = $event->getRouteMatch();
+        /** @var Authorize $service */
+        $service    = $this->container->get(Authorize::class);
+        $match      = $event->getRouteMatch();
         $controller = $match->getParam('controller');
-        $action = $match->getParam('action');
-        $request = $event->getRequest();
-        $method = $request instanceof HttpRequest ? strtolower($request->getMethod()) : null;
+        $action     = $match->getParam('action');
+        $request    = $event->getRequest();
+        $method     = $request instanceof HttpRequest ? strtolower((string) $request->getMethod()) : null;
 
         $authorized = (class_exists(ConsoleRequest::class) && $event->getRequest() instanceof ConsoleRequest)
             || $service->isAllowed($this->getResourceName($controller))
@@ -96,14 +101,14 @@ class Controller extends AbstractGuard
         $errorMessage = sprintf("You are not authorized to access %s:%s", $controller, $action);
         $event->setParam('exception', new UnAuthorizedException($errorMessage));
 
-        /* @var $app \Laminas\Mvc\ApplicationInterface */
-        $app = $event->getTarget();
+        /** @var ApplicationInterface $app */
+        $app          = $event->getTarget();
         $eventManager = $app->getEventManager();
 
         $event->setName(MvcEvent::EVENT_DISPATCH_ERROR);
         $results = $eventManager->triggerEvent($event);
 
-        $return  = $results->last();
+        $return = $results->last();
         if (! $return) {
             return $event->getResult();
         }

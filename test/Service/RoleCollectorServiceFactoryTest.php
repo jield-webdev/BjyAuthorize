@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BjyAuthorizeTest\Service;
 
 use BjyAuthorize\Collector\RoleCollector;
@@ -10,8 +12,6 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Test for {@see \BjyAuthorize\Service\RoleCollectorServiceFactory}
- *
- * @author Marco Pivetta <ocramius@gmail.com>
  */
 class RoleCollectorServiceFactoryTest extends TestCase
 {
@@ -20,8 +20,8 @@ class RoleCollectorServiceFactoryTest extends TestCase
      */
     public function testInvoke()
     {
-        $factory = new RoleCollectorServiceFactory();
-        $container = $this->createMock(ContainerInterface::class);
+        $factory          = new RoleCollectorServiceFactory();
+        $container        = $this->createMock(ContainerInterface::class);
         $identityProvider = $this->createMock(ProviderInterface::class);
 
         $container

@@ -1,25 +1,28 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BjyAuthorizeTest\Collector;
 
+use ArrayIterator;
 use BjyAuthorize\Collector\RoleCollector;
-use \PHPUnit\Framework\TestCase;
+use BjyAuthorize\Provider\Identity\ProviderInterface;
+use Laminas\Mvc\MvcEvent;
+use Laminas\Permissions\Acl\Role\RoleInterface;
+use PHPUnit\Framework\TestCase;
+
+use function serialize;
+use function unserialize;
 
 /**
  * Tests for {@see \BjyAuthorize\Collector\RoleCollector}
- *
- * @author Marco Pivetta <ocramius@gmail.com>
  */
 class RoleCollectorTest extends TestCase
 {
-    /**
-     * @var \BjyAuthorize\Collector\RoleCollector
-     */
+    /** @var RoleCollector */
     protected $collector;
 
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\BjyAuthorize\Provider\Identity\ProviderInterface
-     */
+    /** @var MockObject|ProviderInterface */
     protected $identityProvider;
 
     /**
@@ -29,7 +32,7 @@ class RoleCollectorTest extends TestCase
      */
     public function setUp(): void
     {
-        $this->identityProvider = $this->createMock('BjyAuthorize\\Provider\\Identity\\ProviderInterface');
+        $this->identityProvider = $this->createMock(ProviderInterface::class);
         $this->collector        = new RoleCollector($this->identityProvider);
     }
 
@@ -41,8 +44,8 @@ class RoleCollectorTest extends TestCase
      */
     public function testCollect()
     {
-        $role1    = $this->createMock('Laminas\\Permissions\\Acl\\Role\\RoleInterface');
-        $mvcEvent = $this->createMock('Laminas\\Mvc\\MvcEvent');
+        $role1    = $this->createMock(RoleInterface::class);
+        $mvcEvent = $this->createMock(MvcEvent::class);
 
         $role1->expects($this->any())->method('getRoleId')->will($this->returnValue('role1'));
 
@@ -53,9 +56,9 @@ class RoleCollectorTest extends TestCase
             ->will(
                 $this->returnValue(
                     [
-                         $role1,
-                         'role2',
-                         'key' => 'role3',
+                        $role1,
+                        'role2',
+                        'key' => 'role3',
                     ]
                 )
             );
@@ -69,7 +72,7 @@ class RoleCollectorTest extends TestCase
         $this->assertContains('role2', $roles);
         $this->assertContains('role3', $roles);
 
-        /* @var $collector \BjyAuthorize\Collector\RoleCollector */
+        /** @var RoleCollector $collector */
         $collector = unserialize(serialize($this->collector));
 
         $collector->collect($mvcEvent);
@@ -88,8 +91,8 @@ class RoleCollectorTest extends TestCase
      */
     public function testTraversableCollect()
     {
-        $role1    = $this->createMock('Laminas\\Permissions\\Acl\\Role\\RoleInterface');
-        $mvcEvent = $this->createMock('Laminas\\Mvc\\MvcEvent');
+        $role1    = $this->createMock(RoleInterface::class);
+        $mvcEvent = $this->createMock(MvcEvent::class);
 
         $role1->expects($this->any())->method('getRoleId')->will($this->returnValue('role1'));
 
@@ -99,7 +102,7 @@ class RoleCollectorTest extends TestCase
             ->method('getIdentityRoles')
             ->will(
                 $this->returnValue(
-                    new \ArrayIterator(
+                    new ArrayIterator(
                         [
                             $role1,
                             'role2',

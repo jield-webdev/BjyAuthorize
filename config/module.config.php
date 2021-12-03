@@ -12,7 +12,7 @@ return [
         'authenticated_role'    => 'user',
 
         // identity provider service name
-        'identity_provider'     => 'BjyAuthorize\Provider\Identity\LmcUserLaminasDb',
+        'identity_provider'     => Provider\Identity\LmcUserLaminasDb::class,
 
         // Role providers to be used to load all available roles into Laminas\Permissions\Acl\Acl
         // Keys are the provider service names, values are the options to be passed to the provider
@@ -30,7 +30,7 @@ return [
         'guards'                => [],
 
         // strategy service name for the strategy listener to be used when permission-related errors are detected
-        'unauthorized_strategy' => 'BjyAuthorize\View\UnauthorizedStrategy',
+        'unauthorized_strategy' => View\UnauthorizedStrategy::class,
 
         // Template name for the unauthorized strategy
         'template'              => 'error/403',
@@ -106,7 +106,7 @@ return [
     'laminas-developer-tools' => [
         'profiler' => [
             'collectors' => [
-                'bjy_authorize_role_collector' => 'BjyAuthorize\\Collector\\RoleCollector',
+                'bjy_authorize_role_collector' => Collector\RoleCollector::class,
             ],
         ],
         'toolbar' => [

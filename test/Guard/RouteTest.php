@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BjyAuthorizeTest\Guard;
 
 use BjyAuthorize\Exception\UnAuthorizedException;
@@ -13,28 +15,21 @@ use Laminas\Mvc\Application;
 use Laminas\Mvc\MvcEvent;
 use Laminas\Router\RouteMatch;
 use Laminas\ServiceManager\ServiceLocatorInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Route Guard test
- *
- * @author Marco Pivetta <ocramius@gmail.com>
  */
 class RouteTest extends TestCase
 {
-    /**
-     * @var \Laminas\ServiceManager\ServiceLocatorInterface|\PHPUnit\Framework\MockObject\MockObject
-     */
+    /** @var ServiceLocatorInterface|MockObject */
     protected $serviceLocator;
 
-    /**
-     * @var \BjyAuthorize\Service\Authorize|\PHPUnit\Framework\MockObject\MockObject
-     */
+    /** @var Authorize|MockObject */
     protected $authorize;
 
-    /**
-     * @var Route
-     */
+    /** @var Route */
     protected $routeGuard;
 
     /**
@@ -48,10 +43,10 @@ class RouteTest extends TestCase
 
         $this->serviceLocator = $this->getMockBuilder(ServiceLocatorInterface::class)
             ->getMock();
-        $this->authorize = $authorize = $this->getMockBuilder(Authorize::class)
+        $this->authorize      = $authorize = $this->getMockBuilder(Authorize::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $this->routeGuard = new Route([], $this->serviceLocator);
+        $this->routeGuard     = new Route([], $this->serviceLocator);
 
         $this
             ->serviceLocator
@@ -98,24 +93,24 @@ class RouteTest extends TestCase
     {
         $controller = new Route(
             [
-                 [
-                     'route' => 'test/route',
-                     'roles' => [
-                         'admin',
-                         'user',
-                     ],
-                 ],
-                 [
-                     'route' => 'test2-route',
-                     'roles' => [
-                         'admin2',
-                         'user2',
-                     ],
-                 ],
-                 [
-                     'route' => 'test3-route',
-                     'roles' => 'admin3'
-                 ],
+                [
+                    'route' => 'test/route',
+                    'roles' => [
+                        'admin',
+                        'user',
+                    ],
+                ],
+                [
+                    'route' => 'test2-route',
+                    'roles' => [
+                        'admin2',
+                        'user2',
+                    ],
+                ],
+                [
+                    'route' => 'test3-route',
+                    'roles' => 'admin3',
+                ],
             ],
             $this->serviceLocator
         );
@@ -152,14 +147,14 @@ class RouteTest extends TestCase
     {
         $controller = new Route(
             [
-                 [
-                     'route' => 'test/route',
-                     'roles' => [
-                         'admin',
-                         'user',
-                     ],
-                     'assertion' => 'test-assertion'
-                 ],
+                [
+                    'route'     => 'test/route',
+                    'roles'     => [
+                        'admin',
+                        'user',
+                    ],
+                    'assertion' => 'test-assertion',
+                ],
             ],
             $this->serviceLocator
         );
@@ -235,12 +230,12 @@ class RouteTest extends TestCase
      */
     public function testOnDispatchWithInvalidResourceConsole()
     {
-        $event = $this->getMockBuilder(MvcEvent::class)
+        $event      = $this->getMockBuilder(MvcEvent::class)
             ->getMock();
         $routeMatch = $this->getMockBuilder(RouteMatch::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $request = $this->getMockBuilder(ConsoleRequest::class)
+        $request    = $this->getMockBuilder(ConsoleRequest::class)
             ->disableOriginalConstructor()
             ->getMock();
         $event->method('getRouteMatch')->willReturn($routeMatch);
@@ -251,22 +246,21 @@ class RouteTest extends TestCase
 
     /**
      * @param string|null $route
-     *
-     * @return \PHPUnit\Framework\MockObject\MockObject|\Laminas\Mvc\MvcEvent
+     * @return MockObject|MvcEvent
      */
     private function createMvcEvent($route = null)
     {
         $eventManager = $this->getMockBuilder(EventManagerInterface::class)
             ->getMock();
-        $application = $this->getMockBuilder(Application::class)
+        $application  = $this->getMockBuilder(Application::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $event = $this->getMockBuilder(MvcEvent::class)
+        $event        = $this->getMockBuilder(MvcEvent::class)
             ->getMock();
-        $routeMatch = $this->getMockBuilder(RouteMatch::class)
+        $routeMatch   = $this->getMockBuilder(RouteMatch::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $request = $this->getMockBuilder(HttpRequest::class)
+        $request      = $this->getMockBuilder(HttpRequest::class)
             ->getMock();
 
         $event->expects($this->any())->method('getRouteMatch')->will($this->returnValue($routeMatch));
