@@ -11,7 +11,7 @@ use BjyAuthorize\Service\GuardsServiceFactory;
 use BjyAuthorize\Service\ResourceProvidersServiceFactory;
 use BjyAuthorize\Service\RoleProvidersServiceFactory;
 use BjyAuthorize\Service\RuleProvidersServiceFactory;
-use Laminas\Cache\Storage\Adapter\Filesystem;
+use Laminas\Cache\Storage\Adapter\AbstractAdapter;
 use Laminas\Permissions\Acl\Acl;
 use Laminas\Permissions\Acl\Resource\GenericResource;
 use Laminas\ServiceManager\ServiceManager;
@@ -34,7 +34,7 @@ class AuthorizeTest extends TestCase
      */
     protected function setUp(): void
     {
-        $cache = $this->getMockBuilder(Filesystem::class)
+        $cache = $this->getMockBuilder(AbstractAdapter::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -83,7 +83,7 @@ class AuthorizeTest extends TestCase
         $this->markTestSkipped('TODO refactoring');
         $acl = $this->createMock(Acl::class);
 
-        $cache = $this->getMockBuilder(Filesystem::class)
+        $cache = $this->getMockBuilder(AbstractAdapter::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -120,7 +120,7 @@ class AuthorizeTest extends TestCase
      */
     public function testLoadWritesAclToCacheIfCacheIsEnabledButAclIsNotStoredInCache()
     {
-        $cache = $this->getMockBuilder('Laminas\Cache\Storage\Adapter\Filesystem')
+        $cache = $this->getMockBuilder(AbstractAdapter::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -151,6 +151,8 @@ class AuthorizeTest extends TestCase
         );
         $authorize = new Authorize(['cache_key' => 'acl'], $serviceManager);
         $authorize->load();
+
+        $this->assertTrue(true);
     }
 
 
