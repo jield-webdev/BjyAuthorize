@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace BjyAuthorizeTest\Service;
 
 use BjyAuthorize\Service\CacheFactory;
-use Interop\Container\ContainerInterface;
 use Laminas\Cache\Service\StorageAdapterFactoryInterface;
-use Laminas\Cache\Storage\Adapter\Memory;
 use Laminas\ServiceManager\ServiceManager;
 use PHPUnit\Framework\TestCase;
 
@@ -21,7 +19,7 @@ class CacheFactoryTest extends TestCase
      */
     public function testInvoke()
     {
-        $config    = [
+        $config = [
             'cache_options' => [
                 'adapter' => [
                     'name' => 'memory',
@@ -29,7 +27,7 @@ class CacheFactoryTest extends TestCase
                 'plugins' => [
                     [
                         'name' => 'serializer',
-                    ]
+                    ],
                 ],
             ],
         ];
@@ -37,7 +35,7 @@ class CacheFactoryTest extends TestCase
         $container = new ServiceManager();
         $container->setService('BjyAuthorize\Config', $config);
         $container->setService(
-            'Laminas\Cache\Service\StorageAdapterFactoryInterface',
+            StorageAdapterFactoryInterface::class,
             $this->getMockBuilder(StorageAdapterFactoryInterface::class)
                 ->getMock()
         );
