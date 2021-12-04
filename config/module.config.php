@@ -2,6 +2,8 @@
 
 namespace BjyAuthorize;
 
+use Laminas\Cache\Service\StorageAdapterFactoryInterface;
+
 return [
     'bjyauthorize' => [
         // default role for unauthenticated users
@@ -38,14 +40,16 @@ return [
         // Flag if cache should be enabled or not
         'cache_enabled'         => true,
 
-        // cache options have to be compatible with Laminas\Cache\StorageFactory::factory
+        // cache options have to be compatible with Laminas\Cache\StorageAdapterFactoryInterface::create
         'cache_options'         => [
             'adapter'   => [
                 'name' => 'memory',
             ],
             'plugins'   => [
-                'serializer',
-            ]
+                [
+                    'name'=> 'serializer',
+                ],
+            ],
         ],
 
         // Key used by the cache for caching the acl
