@@ -7,6 +7,7 @@ namespace BjyAuthorize\Service;
 use Interop\Container\ContainerInterface;
 use Laminas\Cache\Service\StorageAdapterFactoryInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
+
 use function is_array;
 
 /**

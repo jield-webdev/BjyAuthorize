@@ -31,7 +31,7 @@
         "laminas/laminas-eventmanager":    "^3.4.0",
         "laminas/laminas-servicemanager":  "^3.7.0",
         "laminas/laminas-http":            "^2.15.0",
-        "laminas/laminas-view":            "^2.12.0",
+        "laminas/laminas-view":            "^2.14.2",
         "laminas/laminas-authentication":  "^2.8.0",
         "laminas/laminas-cache":           "^2.13.2 || ^3.1.0"
     },
