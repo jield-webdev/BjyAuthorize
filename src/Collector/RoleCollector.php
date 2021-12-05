@@ -87,6 +87,7 @@ class RoleCollector implements CollectorInterface, Serializable
 
     /**
      * {@inheritDoc}
+     * TODO remove with php74+
      */
     public function serialize()
     {
@@ -95,9 +96,28 @@ class RoleCollector implements CollectorInterface, Serializable
 
     /**
      * {@inheritDoc}
+     * TODO remove with php74+
      */
     public function unserialize($serialized)
     {
         $this->collectedRoles = unserialize($serialized);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function __serialize()
+    {
+        return [
+            'collectedRoles' => $this->collectedRoles,
+        ];
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function __unserialize(array $serialized)
+    {
+        $this->collectedRoles = $serialized['collectedRoles'];
     }
 }
