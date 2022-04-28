@@ -9,6 +9,7 @@ use BjyAuthorize\View\UnauthorizedStrategy;
 use Laminas\EventManager\EventInterface;
 use Laminas\ModuleManager\Feature\BootstrapListenerInterface;
 use Laminas\ModuleManager\Feature\ConfigProviderInterface;
+use Laminas\ModuleManager\Feature\DependencyIndicatorInterface;
 use Laminas\Mvc\ApplicationInterface;
 use Laminas\ServiceManager\ServiceManager;
 
@@ -17,7 +18,8 @@ use Laminas\ServiceManager\ServiceManager;
  */
 class Module implements
     BootstrapListenerInterface,
-    ConfigProviderInterface
+    ConfigProviderInterface,
+    DependencyIndicatorInterface
 {
     /**
      * {@inheritDoc}
@@ -54,5 +56,14 @@ class Module implements
     public function getConfig()
     {
         return include __DIR__ . '/../config/module.config.php';
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getModuleDependencies() {
+        return [
+            'Laminas\Cache',
+        ];
     }
 }
