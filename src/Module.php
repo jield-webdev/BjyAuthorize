@@ -61,7 +61,8 @@ class Module implements
     /**
      * {@inheritDoc}
      */
-    public function getModuleDependencies() {
+    public function getModuleDependencies()
+    {
         return [
             'Laminas\Cache',
         ];
