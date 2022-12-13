@@ -25,7 +25,7 @@
         }
     ],
     "require": {
-        "php": "^7.3 || ~8.0.0 || ~8.1.0",
+        "php": "^7.3 || ~8.0.0 || ~8.1.0 || ~8.2.0",
         "laminas/laminas-permissions-acl": "^2.8.0",
         "laminas/laminas-mvc":             "^3.2.0",
         "laminas/laminas-eventmanager":    "^3.4.0",
@@ -57,6 +57,13 @@
     "autoload-dev": {
         "psr-4": {
             "BjyAuthorizeTest\\": "test/"
+        }
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "composer/package-versions-deprecated": true,
+            "dealerdirect/phpcodesniffer-composer-installer": true
         }
     },
     "scripts": {
