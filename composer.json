@@ -1,5 +1,5 @@
 {
-  "name": "kokspflanze/bjy-authorize",
+  "name": "jield-webdev/bjy-authorize",
   "description": "Laminas\\Acl based firewall system for Laminas dispatch protection",
   "type": "library",
   "license": "BSD-3-Clause",
@@ -25,7 +25,7 @@
     }
   ],
   "require": {
-    "php": "~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0",
+    "php": "~8.3.0 || ~8.4.0",
     "laminas/laminas-permissions-acl": "^2.16",
     "laminas/laminas-mvc": "^3.7",
     "laminas/laminas-eventmanager": "^3.13",
