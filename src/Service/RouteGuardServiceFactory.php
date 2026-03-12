@@ -18,8 +18,8 @@ class RouteGuardServiceFactory implements FactoryInterface
      *
      * @see \Laminas\ServiceManager\Factory\FactoryInterface::__invoke()
      */
-    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)
+    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null): Route|object
     {
-        return new Route($container->get('BjyAuthorize\Config')['guards'][Route::class], $container);
+        return new Route(rules: $container->get('BjyAuthorize\Config')['guards'][Route::class], container: $container);
     }
 }

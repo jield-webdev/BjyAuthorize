@@ -13,7 +13,7 @@ use Laminas\Mvc\Controller\Plugin\AbstractPlugin;
 class IsAllowed extends AbstractPlugin
 {
     /** @var Authorize */
-    protected $authorizeService;
+    protected Authorize $authorizeService;
 
     public function __construct(Authorize $authorizeService)
     {
@@ -25,8 +25,8 @@ class IsAllowed extends AbstractPlugin
      * @param mixed|null $privilege
      * @return bool
      */
-    public function __invoke($resource, $privilege = null)
+    public function __invoke(mixed $resource, mixed $privilege = null): bool
     {
-        return $this->authorizeService->isAllowed($resource, $privilege);
+        return $this->authorizeService->isAllowed(resource: $resource, privilege: $privilege);
     }
 }

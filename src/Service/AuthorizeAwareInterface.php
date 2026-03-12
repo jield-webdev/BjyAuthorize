@@ -15,5 +15,5 @@ interface AuthorizeAwareInterface
     /**
      * @return void
      */
-    public function setAuthorizeService(Authorize $auth);
+    public function setAuthorizeService(Authorize $auth): void;
 }

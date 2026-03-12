@@ -21,47 +21,31 @@ class Module implements
     ConfigProviderInterface,
     DependencyIndicatorInterface
 {
-    /**
-     * {@inheritDoc}
-     */
-    public function onBootstrap(EventInterface $event)
+    public function onBootstrap(EventInterface $e): void
     {
         /** @var ApplicationInterface $app */
-        $app = $event->getTarget();
+        $app = $e->getTarget();
         /** @var ServiceManager $serviceManager */
         $serviceManager = $app->getServiceManager();
-        $config         = $serviceManager->get('BjyAuthorize\Config');
+        $config         = $serviceManager->get(name: 'BjyAuthorize\Config');
         /** @var UnauthorizedStrategy $strategy */
-        $strategy = $serviceManager->get($config['unauthorized_strategy']);
+        $strategy = $serviceManager->get(name: $config['unauthorized_strategy']);
         /** @var AbstractGuard[] $guards */
-        $guards = $serviceManager->get('BjyAuthorize\Guards');
-
-        // TODO remove in 3.0.0, fix alias
-        if ($serviceManager instanceof ServiceManager && $serviceManager->has('lmcuser_user_service') === false) {
-            $serviceManager->setAllowOverride(true);
-            $serviceManager->setAlias('lmcuser_user_service', 'zfcuser_user_service');
-            $serviceManager->setAllowOverride(false);
-        }
+        $guards = $serviceManager->get(name: 'BjyAuthorize\Guards');
 
         foreach ($guards as $guard) {
-            $guard->attach($app->getEventManager());
+            $guard->attach(events: $app->getEventManager());
         }
 
-        $strategy->attach($app->getEventManager());
+        $strategy->attach(events: $app->getEventManager());
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function getConfig()
     {
         return include __DIR__ . '/../config/module.config.php';
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function getModuleDependencies()
+    public function getModuleDependencies(): array
     {
         return [
             'Laminas\Cache',

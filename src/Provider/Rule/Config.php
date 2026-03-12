@@ -10,7 +10,7 @@ namespace BjyAuthorize\Provider\Rule;
 class Config implements ProviderInterface
 {
     /** @var array */
-    protected $rules = [];
+    protected array $rules = [];
 
     /**
      * @param array $config
@@ -23,7 +23,7 @@ class Config implements ProviderInterface
     /**
      * {@inheritDoc}
      */
-    public function getRules()
+    public function getRules(): array
     {
         return $this->rules;
     }

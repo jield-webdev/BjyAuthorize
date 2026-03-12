@@ -20,7 +20,7 @@ class CacheFactory implements FactoryInterface
      *
      * @see \Laminas\ServiceManager\Factory\FactoryInterface::__invoke()
      */
-    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)
+    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null): \Laminas\Cache\Storage\StorageInterface|object
     {
         /** @var StorageAdapterFactoryInterface $storageFactory */
         $storageFactory = $container->get(StorageAdapterFactoryInterface::class);
@@ -29,19 +29,15 @@ class CacheFactory implements FactoryInterface
 
         $plugins = [];
         foreach ($cacheOptions['plugins'] as $plugin) {
-            if (is_array($plugin)) {
-                $plugins[] = $plugin;
-            } else {
-                $plugins[] = [
-                    'name' => $plugin,
-                ];
-            }
+            $plugins[] = is_array(value: $plugin) ? $plugin : [
+                'name' => $plugin,
+            ];
         }
 
         return $storageFactory->create(
-            $cacheOptions['adapter']['name'],
-            $cacheOptions['options'] ?? [],
-            $plugins
+            storage: $cacheOptions['adapter']['name'],
+            options: $cacheOptions['options'] ?? [],
+            plugins: $plugins
         );
     }
 }

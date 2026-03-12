@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace BjyAuthorize\Acl;
 
 use BjyAuthorize\Exception;
-use BjyAuthorize\Exception\InvalidRoleException;
 use Laminas\Permissions\Acl\Role\RoleInterface;
-
 use function is_string;
 
 /**
@@ -16,58 +14,46 @@ use function is_string;
 class Role implements RoleInterface, HierarchicalRoleInterface
 {
     /** @var string */
-    protected $roleId;
+    protected string $roleId;
 
-    /** @var RoleInterface */
-    protected $parent;
+    protected null|string|RoleInterface $parent;
 
     /**
      * @param string|null $roleId
-     * @param RoleInterface|string|null $parent
+     * @param string|RoleInterface|null $parent
      */
-    public function __construct($roleId = null, $parent = null)
+    public function __construct(?string $roleId = null, null|string|RoleInterface $parent = null)
     {
         if (null !== $roleId) {
-            $this->setRoleId($roleId);
+            $this->setRoleId(roleId: $roleId);
         }
+
         if (null !== $parent) {
-            $this->setParent($parent);
+            $this->setParent(parent: $parent);
         }
     }
 
     /**
      * {@inheritDoc}
      */
-    public function getRoleId()
+    public function getRoleId(): string
     {
         return $this->roleId;
     }
 
-    /**
-     * @param string $roleId
-     * @return self
-     */
-    public function setRoleId($roleId)
+    public function setRoleId(string $roleId): static
     {
-        $this->roleId = (string) $roleId;
+        $this->roleId = $roleId;
 
         return $this;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function getParent()
+    public function getParent(): ?RoleInterface
     {
         return $this->parent;
     }
 
-    /**
-     * @param RoleInterface|string|null $parent
-     * @throws InvalidRoleException
-     * @return self
-     */
-    public function setParent($parent)
+    public function setParent(string|RoleInterface|null $parent): static
     {
         if (null === $parent) {
             $this->parent = null;
@@ -75,8 +61,8 @@ class Role implements RoleInterface, HierarchicalRoleInterface
             return $this;
         }
 
-        if (is_string($parent)) {
-            $this->parent = new Role($parent);
+        if (is_string(value: $parent)) {
+            $this->parent = new Role(roleId: $parent);
 
             return $this;
         }
@@ -87,6 +73,6 @@ class Role implements RoleInterface, HierarchicalRoleInterface
             return $this;
         }
 
-        throw Exception\InvalidRoleException::invalidRoleInstance($parent);
+        throw Exception\InvalidRoleException::invalidRoleInstance(role: $parent);
     }
 }

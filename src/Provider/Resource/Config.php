@@ -12,7 +12,7 @@ use Laminas\Permissions\Acl\Resource\ResourceInterface;
 class Config implements ProviderInterface
 {
     /** @var ResourceInterface[] */
-    protected $resources = [];
+    protected array $resources = [];
 
     /**
      * @param ResourceInterface[] $config
@@ -25,7 +25,7 @@ class Config implements ProviderInterface
     /**
      * {@inheritDoc}
      */
-    public function getResources()
+    public function getResources(): array
     {
         return $this->resources;
     }

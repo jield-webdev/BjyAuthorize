@@ -6,12 +6,9 @@ namespace BjyAuthorize\Guard;
 
 use BjyAuthorize\Exception\UnAuthorizedException;
 use BjyAuthorize\Service\Authorize;
-use Laminas\Console\Request as ConsoleRequest;
 use Laminas\EventManager\EventManagerInterface;
 use Laminas\Mvc\Application;
 use Laminas\Mvc\MvcEvent;
-
-use function class_exists;
 
 /**
  * Route Guard listener, allows checking of permissions
@@ -22,12 +19,12 @@ class Route extends AbstractGuard
     /**
      * Marker for invalid route errors
      */
-    public const ERROR = 'error-unauthorized-route';
+    public const string ERROR = 'error-unauthorized-route';
 
     /**
      * @return string[]
      */
-    protected function extractResourcesFromRule(array $rule)
+    protected function extractResourcesFromRule(array $rule): array
     {
         return ['route/' . $rule['route']];
     }
@@ -37,14 +34,12 @@ class Route extends AbstractGuard
      */
     public function attach(EventManagerInterface $events, $priority = 1)
     {
-        $this->listeners[] = $events->attach(MvcEvent::EVENT_ROUTE, [$this, 'onRoute'], -1000);
+        $this->listeners[] = $events->attach(eventName: MvcEvent::EVENT_ROUTE, listener: $this->onRoute(...), priority: -1000);
     }
 
     /**
      * Event callback to be triggered on dispatch, causes application error triggering
      * in case of failed authorization check
-     *
-     * @return mixed
      */
     public function onRoute(MvcEvent $event)
     {
@@ -53,31 +48,28 @@ class Route extends AbstractGuard
         $match     = $event->getRouteMatch();
         $routeName = $match->getMatchedRouteName();
 
-        if (
-            $service->isAllowed('route/' . $routeName)
-            || (class_exists(ConsoleRequest::class)
-            && $event->getRequest() instanceof ConsoleRequest)
-        ) {
+        //Bypass this function for CLI processes
+        if (PHP_SAPI === 'cli') {
             return;
         }
 
-        $event->setError(static::ERROR);
-        $event->setParam('route', $routeName);
-        $event->setParam('identity', $service->getIdentity());
+        $event->setError(message: static::ERROR);
+        $event->setParam(name: 'route', value: $routeName);
+        $event->setParam(name: 'identity', value: $service->getIdentity());
         $event->setParam(
-            'exception',
-            new UnAuthorizedException('You are not authorized to access ' . $routeName)
+            name: 'exception',
+            value: new UnAuthorizedException(message: 'You are not authorized to access ' . $routeName)
         );
 
         /** @var Application $app */
         $app          = $event->getTarget();
         $eventManager = $app->getEventManager();
 
-        $event->setName(MvcEvent::EVENT_DISPATCH_ERROR);
-        $results = $eventManager->triggerEvent($event);
+        $event->setName(name: MvcEvent::EVENT_DISPATCH_ERROR);
+        $results = $eventManager->triggerEvent(event: $event);
 
         $return = $results->last();
-        if (! $return) {
+        if (!$return) {
             return $event->getResult();
         }
 

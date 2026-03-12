@@ -18,10 +18,10 @@ class ConfigResourceProviderServiceFactory implements FactoryInterface
      *
      * @see \Laminas\ServiceManager\Factory\FactoryInterface::__invoke()
      */
-    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)
+    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null): object|Config
     {
         return new Config(
-            $container->get('BjyAuthorize\Config')['resource_providers'][Config::class]
+            config: $container->get('BjyAuthorize\Config')['resource_providers'][Config::class]
         );
     }
 }

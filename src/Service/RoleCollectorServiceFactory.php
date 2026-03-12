@@ -19,11 +19,11 @@ class RoleCollectorServiceFactory implements FactoryInterface
      *
      * @see \Laminas\ServiceManager\Factory\FactoryInterface::__invoke()
      */
-    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)
+    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null): RoleCollector|object
     {
         /** @var ProviderInterface $identityProvider */
         $identityProvider = $container->get(ProviderInterface::class);
 
-        return new RoleCollector($identityProvider);
+        return new RoleCollector(identityProvider: $identityProvider);
     }
 }

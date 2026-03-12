@@ -18,8 +18,8 @@ class UnauthorizedStrategyServiceFactory implements FactoryInterface
      *
      * @see \Laminas\ServiceManager\Factory\FactoryInterface::__invoke()
      */
-    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)
+    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null): UnauthorizedStrategy|object
     {
-        return new UnauthorizedStrategy($container->get('BjyAuthorize\Config')['template']);
+        return new UnauthorizedStrategy(template: $container->get('BjyAuthorize\Config')['template']);
     }
 }

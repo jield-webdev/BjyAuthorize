@@ -17,7 +17,7 @@ use function array_values;
 class ObjectRepositoryProvider implements ProviderInterface
 {
     /** @var ObjectRepository */
-    protected $objectRepository;
+    protected ObjectRepository $objectRepository;
 
     public function __construct(ObjectRepository $objectRepository)
     {
@@ -27,7 +27,7 @@ class ObjectRepositoryProvider implements ProviderInterface
     /**
      * {@inheritDoc}
      */
-    public function getRoles()
+    public function getRoles(): array
     {
         $result = $this->objectRepository->findAll();
         $roles  = [];
@@ -45,7 +45,7 @@ class ObjectRepositoryProvider implements ProviderInterface
                 $parent = $parent->getRoleId();
             }
 
-            $roles[$roleId] = new Role($roleId, $parent);
+            $roles[$roleId] = new Role(roleId: $roleId, parent: $parent);
         }
 
         // Pass Two: Re-inject parent objects to preserve hierarchy
@@ -54,10 +54,10 @@ class ObjectRepositoryProvider implements ProviderInterface
             $parentRoleObj = $roleObj->getParent();
 
             if ($parentRoleObj && $parentRoleObj->getRoleId()) {
-                $roleObj->setParent($roles[$parentRoleObj->getRoleId()]);
+                $roleObj->setParent(parent: $roles[$parentRoleObj->getRoleId()]);
             }
         }
 
-        return array_values($roles);
+        return array_values(array: $roles);
     }
 }

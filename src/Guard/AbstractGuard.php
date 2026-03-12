@@ -10,7 +10,6 @@ use BjyAuthorize\Provider\Resource\ProviderInterface as ResourceProviderInterfac
 use BjyAuthorize\Provider\Rule\ProviderInterface as RuleProviderInterface;
 use Interop\Container\ContainerInterface;
 use Laminas\EventManager\AbstractListenerAggregate;
-
 use function array_keys;
 
 abstract class AbstractGuard extends AbstractListenerAggregate implements
@@ -31,10 +30,10 @@ abstract class AbstractGuard extends AbstractListenerAggregate implements
     {
         $this->container = $container;
         foreach ($rules as $rule) {
-            $rule['roles']  = (array) $rule['roles'];
-            $rule['action'] = isset($rule['action']) ? (array) $rule['action'] : [null];
+            $rule['roles']  = (array)$rule['roles'];
+            $rule['action'] = isset($rule['action']) ? (array)$rule['action'] : [null];
             foreach ($this->extractResourcesFromRule($rule) as $resource) {
-                $this->rules[$resource] = ['roles' => (array) $rule['roles']];
+                $this->rules[$resource] = ['roles' => (array)$rule['roles']];
                 if (isset($rule['assertion'])) {
                     $this->rules[$resource]['assertion'] = $rule['assertion'];
                 }
@@ -44,23 +43,15 @@ abstract class AbstractGuard extends AbstractListenerAggregate implements
 
     abstract protected function extractResourcesFromRule(array $rule);
 
-    /**
-     * {@inheritDoc}
-     */
-    public function getResources()
+    public function getResources(): array
     {
         $resources = [];
-        foreach (array_keys($this->rules) as $resource) {
-            $resources[] = $resource;
-        }
+        $resources = array_keys($this->rules);
 
         return $resources;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function getRules()
+    public function getRules(): array
     {
         $rules = [];
         foreach ($this->rules as $resource => $ruleData) {
@@ -69,7 +60,7 @@ abstract class AbstractGuard extends AbstractListenerAggregate implements
             $rule[] = $resource;
             if (isset($ruleData['assertion'])) {
                 $rule[] = null;
-        // no privilege
+                // no privilege
                 $rule[] = $ruleData['assertion'];
             }
 

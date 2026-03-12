@@ -17,8 +17,8 @@ class AuthorizeFactory implements FactoryInterface
      *
      * @see \Laminas\ServiceManager\Factory\FactoryInterface::__invoke()
      */
-    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)
+    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null): object|Authorize
     {
-        return new Authorize($container->get('BjyAuthorize\Config'), $container);
+        return new Authorize(config: $container->get('BjyAuthorize\Config'), serviceLocator: $container);
     }
 }

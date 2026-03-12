@@ -6,7 +6,6 @@ namespace BjyAuthorize\Provider\Role;
 
 use BjyAuthorize\Acl\Role;
 use Laminas\Permissions\Acl\Role\RoleInterface;
-
 use function array_merge;
 use function count;
 use function is_numeric;
@@ -17,7 +16,7 @@ use function is_numeric;
 class Config implements ProviderInterface
 {
     /** @var RoleInterface[] */
-    protected $roles = [];
+    protected array $roles = [];
 
     /**
      * @param array $config
@@ -27,39 +26,29 @@ class Config implements ProviderInterface
         $roles = [];
 
         foreach ($config as $key => $value) {
-            if (is_numeric($key)) {
-                $roles = array_merge($roles, $this->loadRole($value));
+            if (is_numeric(value: $key)) {
+                $roles = array_merge($roles, $this->loadRole(name: $value));
             } else {
-                $roles = array_merge($roles, $this->loadRole($key, $value));
+                $roles = array_merge($roles, $this->loadRole(name: $key, options: $value));
             }
         }
 
         $this->roles = $roles;
     }
 
-    /**
-     * @param string $name
-     * @param array $options
-     * @param string|null $parent
-     * @return array
-     */
-    protected function loadRole($name, $options = [], $parent = null)
+    protected function loadRole(string $name, array $options = [], null|string|RoleInterface $parent = null): array
     {
-        if (isset($options['children']) && count($options['children']) > 0) {
-            $children = $options['children'];
-        } else {
-            $children = [];
-        }
+        $children = isset($options['children']) && count(value: $options['children']) > 0 ? $options['children'] : [];
 
         $roles   = [];
-        $role    = new Role($name, $parent);
+        $role    = new Role(roleId: $name, parent: $parent);
         $roles[] = $role;
 
         foreach ($children as $key => $value) {
-            if (is_numeric($key)) {
-                $roles = array_merge($roles, $this->loadRole($value, [], $role));
+            if (is_numeric(value: $key)) {
+                $roles = array_merge($roles, $this->loadRole(name: $value, options: [], parent: $role));
             } else {
-                $roles = array_merge($roles, $this->loadRole($key, $value, $role));
+                $roles = array_merge($roles, $this->loadRole(name: $key, options: $value, parent: $role));
             }
         }
 
@@ -69,7 +58,7 @@ class Config implements ProviderInterface
     /**
      * {@inheritDoc}
      */
-    public function getRoles()
+    public function getRoles(): array
     {
         return $this->roles;
     }

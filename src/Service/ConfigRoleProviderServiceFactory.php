@@ -18,10 +18,10 @@ class ConfigRoleProviderServiceFactory implements FactoryInterface
      *
      * @see \Laminas\ServiceManager\Factory\FactoryInterface::__invoke()
      */
-    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)
+    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null): Config|object
     {
         return new Config(
-            $container->get('BjyAuthorize\Config')['role_providers'][Config::class]
+            config: $container->get('BjyAuthorize\Config')['role_providers'][Config::class]
         );
     }
 }
