@@ -7,9 +7,6 @@ namespace BjyAuthorize\Service;
 use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 
-/**
- * Factory responsible of building {@see \BjyAuthorize\Provider\Identity\ProviderInterface}
- */
 class IdentityProviderServiceFactory implements FactoryInterface
 {
     /**

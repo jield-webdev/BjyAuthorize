@@ -21,13 +21,10 @@ class Module implements
     ConfigProviderInterface,
     DependencyIndicatorInterface
 {
-    /**
-     * {@inheritDoc}
-     */
-    public function onBootstrap(EventInterface $event): void
+    public function onBootstrap(EventInterface $e): void
     {
         /** @var ApplicationInterface $app */
-        $app = $event->getTarget();
+        $app = $e->getTarget();
         /** @var ServiceManager $serviceManager */
         $serviceManager = $app->getServiceManager();
         $config         = $serviceManager->get(name: 'BjyAuthorize\Config');
@@ -36,13 +33,6 @@ class Module implements
         /** @var AbstractGuard[] $guards */
         $guards = $serviceManager->get(name: 'BjyAuthorize\Guards');
 
-        // TODO remove in 3.0.0, fix alias
-        if ($serviceManager instanceof ServiceManager && $serviceManager->has(name: 'lmcuser_user_service') === false) {
-            $serviceManager->setAllowOverride(flag: true);
-            $serviceManager->setAlias(alias: 'lmcuser_user_service', target: 'zfcuser_user_service');
-            $serviceManager->setAllowOverride(flag: false);
-        }
-
         foreach ($guards as $guard) {
             $guard->attach(events: $app->getEventManager());
         }
@@ -50,17 +40,11 @@ class Module implements
         $strategy->attach(events: $app->getEventManager());
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function getConfig()
     {
         return include __DIR__ . '/../config/module.config.php';
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function getModuleDependencies(): array
     {
         return [

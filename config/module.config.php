@@ -2,10 +2,8 @@
 
 namespace BjyAuthorize;
 
-use Laminas\Cache\Service\StorageAdapterFactoryInterface;
-
 return [
-    'bjyauthorize' => [
+    'bjyauthorize'            => [
         // default role for unauthenticated users
         'default_role'          => 'guest',
 
@@ -14,7 +12,7 @@ return [
         'authenticated_role'    => 'user',
 
         // identity provider service name
-        'identity_provider'     => Provider\Identity\LmcUserLaminasDb::class,
+        'identity_provider'     => Provider\Identity\AuthenticationIdentityProvider::class,
 
         // Role providers to be used to load all available roles into Laminas\Permissions\Acl\Acl
         // Keys are the provider service names, values are the options to be passed to the provider
@@ -42,12 +40,12 @@ return [
 
         // cache options have to be compatible with Laminas\Cache\StorageAdapterFactoryInterface::create
         'cache_options'         => [
-            'adapter'   => [
+            'adapter' => [
                 'name' => 'memory',
             ],
-            'plugins'   => [
+            'plugins' => [
                 [
-                    'name'=> 'serializer',
+                    'name' => 'serializer',
                 ],
             ],
         ],
@@ -55,54 +53,48 @@ return [
         // Key used by the cache for caching the acl
         'cache_key'             => 'bjyauthorize_acl'
     ],
-    'service_manager' => [
-        'factories' => [
-            'BjyAuthorize\Cache' => Service\CacheFactory::class,
-            'BjyAuthorize\CacheKeyGenerator' => Service\CacheKeyGeneratorFactory::class,
-            'BjyAuthorize\Config' => Service\ConfigServiceFactory::class,
-            'BjyAuthorize\Guards' => Service\GuardsServiceFactory::class,
-            'BjyAuthorize\RoleProviders' => Service\RoleProvidersServiceFactory::class,
-            'BjyAuthorize\ResourceProviders' => Service\ResourceProvidersServiceFactory::class,
-            'BjyAuthorize\RuleProviders' => Service\RuleProvidersServiceFactory::class,
-            'BjyAuthorize\Service\RoleDbTableGateway' => Service\UserRoleServiceFactory::class,
-            Collector\RoleCollector::class => Service\RoleCollectorServiceFactory::class,
-            Guard\Controller::class => Service\ControllerGuardServiceFactory::class,
-            Guard\Route::class => Service\RouteGuardServiceFactory::class,
+    'service_manager'         => [
+        'factories'    => [
+            'BjyAuthorize\Cache'                          => Service\CacheFactory::class,
+            'BjyAuthorize\CacheKeyGenerator'              => Service\CacheKeyGeneratorFactory::class,
+            'BjyAuthorize\Config'                         => Service\ConfigServiceFactory::class,
+            'BjyAuthorize\Guards'                         => Service\GuardsServiceFactory::class,
+            'BjyAuthorize\RoleProviders'                  => Service\RoleProvidersServiceFactory::class,
+            'BjyAuthorize\ResourceProviders'              => Service\ResourceProvidersServiceFactory::class,
+            'BjyAuthorize\RuleProviders'                  => Service\RuleProvidersServiceFactory::class,
+            Collector\RoleCollector::class                => Service\RoleCollectorServiceFactory::class,
+            Guard\Controller::class                       => Service\ControllerGuardServiceFactory::class,
+            Guard\Route::class                            => Service\RouteGuardServiceFactory::class,
             Provider\Identity\AuthenticationIdentityProvider::class
-                => Service\AuthenticationIdentityProviderServiceFactory::class,
-            Provider\Identity\LmcUserLaminasDb::class => Service\LmcUserLaminasDbIdentityProviderServiceFactory::class,
-            Provider\Identity\ProviderInterface::class => Service\IdentityProviderServiceFactory::class,
-            Provider\Resource\Config::class => Service\ConfigResourceProviderServiceFactory::class,
-            Provider\Role\Config::class => Service\ConfigRoleProviderServiceFactory::class,
-            Provider\Role\LaminasDb::class => Service\LaminasDbRoleProviderServiceFactory::class,
+                                                          => Service\AuthenticationIdentityProviderServiceFactory::class,
+            Provider\Identity\ProviderInterface::class    => Service\IdentityProviderServiceFactory::class,
+            Provider\Resource\Config::class               => Service\ConfigResourceProviderServiceFactory::class,
+            Provider\Role\Config::class                   => Service\ConfigRoleProviderServiceFactory::class,
             Provider\Role\ObjectRepositoryProvider::class => Service\ObjectRepositoryRoleProviderFactory::class,
-            Provider\Rule\Config::class => Service\ConfigRuleProviderServiceFactory::class,
-            Service\Authorize::class => Service\AuthorizeFactory::class,
-            View\UnauthorizedStrategy::class => Service\UnauthorizedStrategyServiceFactory::class,
+            Provider\Rule\Config::class                   => Service\ConfigRuleProviderServiceFactory::class,
+            Service\Authorize::class                      => Service\AuthorizeFactory::class,
+            View\UnauthorizedStrategy::class              => Service\UnauthorizedStrategyServiceFactory::class,
         ],
-        'invokables'  => [
+        'invokables'   => [
             View\RedirectionStrategy::class,
-        ],
-        'aliases'     => [
-            'bjyauthorize_zend_db_adapter' => \Laminas\Db\Adapter\Adapter::class,
         ],
         'initializers' => [
             Service\AuthorizeAwareServiceInitializer::class
         ],
     ],
-    'controller_plugins' => [
+    'controller_plugins'      => [
         'factories' => [
             'isAllowed' => Controller\Plugin\IsAllowedFactory::class
         ],
     ],
-    'view_manager' => [
+    'view_manager'            => [
         'template_map' => [
             'error/403' => __DIR__ . '/../view/error/403.phtml',
             'laminas-developer-tools/toolbar/bjy-authorize-role'
-                => __DIR__ . '/../view/laminas-developer-tools/toolbar/bjy-authorize-role.phtml',
+                        => __DIR__ . '/../view/laminas-developer-tools/toolbar/bjy-authorize-role.phtml',
         ],
     ],
-    'view_helpers' => [
+    'view_helpers'            => [
         'factories' => [
             'isAllowed' => View\Helper\IsAllowedFactory::class,
         ],
@@ -113,7 +105,7 @@ return [
                 'bjy_authorize_role_collector' => Collector\RoleCollector::class,
             ],
         ],
-        'toolbar' => [
+        'toolbar'  => [
             'entries' => [
                 'bjy_authorize_role_collector' => 'laminas-developer-tools/toolbar/bjy-authorize-role',
             ],
