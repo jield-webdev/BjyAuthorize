@@ -18,11 +18,11 @@ class ControllerGuardServiceFactory implements FactoryInterface
      *
      * @see \Laminas\ServiceManager\Factory\FactoryInterface::__invoke()
      */
-    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)
+    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null): object|Controller
     {
         return new Controller(
-            $container->get('BjyAuthorize\Config')['guards'][Controller::class],
-            $container
+            rules: $container->get('BjyAuthorize\Config')['guards'][Controller::class],
+            container: $container
         );
     }
 }

@@ -22,34 +22,34 @@ use Laminas\View\Model\ViewModel;
 class UnauthorizedStrategy implements ListenerAggregateInterface
 {
     /** @var string */
-    protected $template;
+    protected string $template;
 
     /** @var callable[] An array with callback functions or methods. */
-    protected $listeners = [];
+    protected array $listeners = [];
 
     /**
      * @param string $template name of the template to use on unauthorized requests
      */
-    public function __construct($template)
+    public function __construct(string $template)
     {
-        $this->template = (string) $template;
+        $this->template = $template;
     }
 
     /**
      * {@inheritDoc}
      */
-    public function attach(EventManagerInterface $events, $priority = 1)
+    public function attach(EventManagerInterface $events, $priority = 1): void
     {
-        $this->listeners[] = $events->attach(MvcEvent::EVENT_DISPATCH_ERROR, [$this, 'onDispatchError'], -5000);
+        $this->listeners[] = $events->attach(eventName: MvcEvent::EVENT_DISPATCH_ERROR, listener: $this->onDispatchError(...), priority: -5000);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function detach(EventManagerInterface $events)
+    public function detach(EventManagerInterface $events): void
     {
         foreach ($this->listeners as $index => $listener) {
-            if ($events->detach($listener)) {
+            if ($events->detach(listener: $listener)) {
                 unset($this->listeners[$index]);
             }
         }
@@ -58,15 +58,15 @@ class UnauthorizedStrategy implements ListenerAggregateInterface
     /**
      * @param string $template
      */
-    public function setTemplate($template)
+    public function setTemplate(string $template): void
     {
-        $this->template = (string) $template;
+        $this->template = $template;
     }
 
     /**
      * @return string
      */
-    public function getTemplate()
+    public function getTemplate(): string
     {
         return $this->template;
     }
@@ -78,7 +78,7 @@ class UnauthorizedStrategy implements ListenerAggregateInterface
      *
      * @return void
      */
-    public function onDispatchError(MvcEvent $event)
+    public function onDispatchError(MvcEvent $event): void
     {
         // Do nothing if the result is a response object
         $result   = $event->getResult();
@@ -90,24 +90,24 @@ class UnauthorizedStrategy implements ListenerAggregateInterface
 
         // Common view variables
         $viewVariables = [
-            'error'    => $event->getParam('error'),
-            'identity' => $event->getParam('identity'),
+            'error'    => $event->getParam(name: 'error'),
+            'identity' => $event->getParam(name: 'identity'),
         ];
 
         switch ($event->getError()) {
             case Controller::ERROR:
-                $viewVariables['controller'] = $event->getParam('controller');
-                $viewVariables['action']     = $event->getParam('action');
+                $viewVariables['controller'] = $event->getParam(name: 'controller');
+                $viewVariables['action']     = $event->getParam(name: 'action');
                 break;
             case Route::ERROR:
-                $viewVariables['route'] = $event->getParam('route');
+                $viewVariables['route'] = $event->getParam(name: 'route');
                 break;
             case Application::ERROR_EXCEPTION:
-                if (! $event->getParam('exception') instanceof UnAuthorizedException) {
+                if (! $event->getParam(name: 'exception') instanceof UnAuthorizedException) {
                     return;
                 }
 
-                $viewVariables['reason'] = $event->getParam('exception')->getMessage();
+                $viewVariables['reason'] = $event->getParam(name: 'exception')->getMessage();
                 $viewVariables['error']  = 'error-unauthorized';
                 break;
             default:
@@ -120,12 +120,12 @@ class UnauthorizedStrategy implements ListenerAggregateInterface
                 return;
         }
 
-        $model    = new ViewModel($viewVariables);
+        $model    = new ViewModel(variables: $viewVariables);
         $response = $response ?: new HttpResponse();
 
-        $model->setTemplate($this->getTemplate());
-        $event->getViewModel()->addChild($model);
-        $response->setStatusCode(403);
-        $event->setResponse($response);
+        $model->setTemplate(template: $this->getTemplate());
+        $event->getViewModel()->addChild(child: $model);
+        $response->setStatusCode(code: 403);
+        $event->setResponse(response: $response);
     }
 }

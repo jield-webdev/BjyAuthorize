@@ -8,7 +8,6 @@ use BjyAuthorize\Exception\InvalidRoleException;
 use BjyAuthorize\Provider\Role\ProviderInterface as RoleProviderInterface;
 use Laminas\Authentication\AuthenticationService;
 use Laminas\Permissions\Acl\Role\RoleInterface;
-
 use function is_string;
 
 /**
@@ -16,26 +15,21 @@ use function is_string;
  */
 class AuthenticationIdentityProvider implements ProviderInterface
 {
-    /** @var AuthenticationService */
-    protected $authService;
 
-    /** @var string|RoleInterface */
-    protected $defaultRole = 'guest';
+    protected RoleInterface|string $defaultRole = 'guest';
 
-    /** @var string|RoleInterface */
-    protected $authenticatedRole = 'user';
+    protected RoleInterface|string $authenticatedRole = 'user';
 
-    public function __construct(AuthenticationService $authService)
+    public function __construct(protected AuthenticationService $authService)
     {
-        $this->authService = $authService;
     }
 
     /**
      * {@inheritDoc}
      */
-    public function getIdentityRoles()
+    public function getIdentityRoles(): array
     {
-        if (! $identity = $this->authService->getIdentity()) {
+        if (!$identity = $this->authService->getIdentity()) {
             return [$this->defaultRole];
         }
 
@@ -55,7 +49,7 @@ class AuthenticationIdentityProvider implements ProviderInterface
      *
      * @return string|RoleInterface
      */
-    public function getDefaultRole()
+    public function getDefaultRole(): string|RoleInterface
     {
         return $this->defaultRole;
     }
@@ -63,13 +57,13 @@ class AuthenticationIdentityProvider implements ProviderInterface
     /**
      * Set the rule that's used if you're not authenticated
      *
-     * @param  string|RoleInterface $defaultRole
+     * @param string|RoleInterface $defaultRole
      * @throws InvalidRoleException
      */
-    public function setDefaultRole($defaultRole)
+    public function setDefaultRole(string|RoleInterface $defaultRole): void
     {
-        if (! ($defaultRole instanceof RoleInterface || is_string($defaultRole))) {
-            throw InvalidRoleException::invalidRoleInstance($defaultRole);
+        if (!$defaultRole instanceof RoleInterface && !is_string(value: $defaultRole)) {
+            throw InvalidRoleException::invalidRoleInstance(role: $defaultRole);
         }
 
         $this->defaultRole = $defaultRole;
@@ -80,7 +74,7 @@ class AuthenticationIdentityProvider implements ProviderInterface
      *
      * @return string|RoleInterface
      */
-    public function getAuthenticatedRole()
+    public function getAuthenticatedRole(): string|RoleInterface
     {
         return $this->authenticatedRole;
     }
@@ -91,10 +85,10 @@ class AuthenticationIdentityProvider implements ProviderInterface
      * @param string|RoleInterface $authenticatedRole
      * @throws InvalidRoleException
      */
-    public function setAuthenticatedRole($authenticatedRole)
+    public function setAuthenticatedRole(string|RoleInterface $authenticatedRole): void
     {
-        if (! ($authenticatedRole instanceof RoleInterface || is_string($authenticatedRole))) {
-            throw InvalidRoleException::invalidRoleInstance($authenticatedRole);
+        if (!$authenticatedRole instanceof RoleInterface && !is_string(value: $authenticatedRole)) {
+            throw InvalidRoleException::invalidRoleInstance(role: $authenticatedRole);
         }
 
         $this->authenticatedRole = $authenticatedRole;

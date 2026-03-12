@@ -17,13 +17,11 @@ class CacheKeyGeneratorFactory implements FactoryInterface
      *
      * @see \Laminas\ServiceManager\Factory\FactoryInterface::__invoke()
      */
-    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)
+    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null): object|\Closure
     {
         $config   = $container->get('BjyAuthorize\Config');
         $cacheKey = empty($config['cache_key']) ? 'bjyauthorize_acl' : (string) $config['cache_key'];
 
-        return function () use ($cacheKey) {
-            return $cacheKey;
-        };
+        return fn() => $cacheKey;
     }
 }

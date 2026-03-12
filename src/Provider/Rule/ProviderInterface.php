@@ -13,5 +13,5 @@ interface ProviderInterface
     /**
      * @return array
      */
-    public function getRules();
+    public function getRules(): array;
 }

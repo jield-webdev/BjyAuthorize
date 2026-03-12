@@ -25,10 +25,10 @@ class RoleCollector implements CollectorInterface, Serializable
     public const PRIORITY = 150;
 
     /** @var array|string[] collected role ids */
-    protected $collectedRoles = [];
+    protected array $collectedRoles = [];
 
     /** @var ProviderInterface|null */
-    protected $identityProvider;
+    protected ?ProviderInterface $identityProvider;
 
     public function __construct(ProviderInterface $identityProvider)
     {
@@ -38,7 +38,7 @@ class RoleCollector implements CollectorInterface, Serializable
     /**
      * {@inheritDoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return static::NAME;
     }
@@ -46,7 +46,7 @@ class RoleCollector implements CollectorInterface, Serializable
     /**
      * {@inheritDoc}
      */
-    public function getPriority()
+    public function getPriority(): int
     {
         return static::PRIORITY;
     }
@@ -54,7 +54,7 @@ class RoleCollector implements CollectorInterface, Serializable
     /**
      * {@inheritDoc}
      */
-    public function collect(MvcEvent $mvcEvent)
+    public function collect(MvcEvent $mvcEvent): void
     {
         if (! $this->identityProvider) {
             return;
@@ -62,7 +62,7 @@ class RoleCollector implements CollectorInterface, Serializable
 
         $roles = $this->identityProvider->getIdentityRoles();
 
-        if (! is_array($roles) && ! $roles instanceof Traversable) {
+        if (! is_array(value: $roles) && ! $roles instanceof Traversable) {
             $roles = (array) $roles;
         }
 
@@ -80,7 +80,7 @@ class RoleCollector implements CollectorInterface, Serializable
     /**
      * @return array|string[]
      */
-    public function getCollectedRoles()
+    public function getCollectedRoles(): array
     {
         return $this->collectedRoles;
     }
@@ -89,18 +89,18 @@ class RoleCollector implements CollectorInterface, Serializable
      * {@inheritDoc}
      * TODO remove with php74+
      */
-    public function serialize()
+    public function serialize(): ?string
     {
-        return serialize($this->collectedRoles);
+        return serialize(value: $this->collectedRoles);
     }
 
     /**
      * {@inheritDoc}
      * TODO remove with php74+
      */
-    public function unserialize($serialized)
+    public function unserialize($serialized): void
     {
-        $this->collectedRoles = unserialize($serialized);
+        $this->collectedRoles = unserialize(data: $serialized);
     }
 
     /**

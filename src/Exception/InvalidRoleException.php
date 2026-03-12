@@ -18,10 +18,10 @@ class InvalidRoleException extends InvalidArgumentException
      * @param mixed $role
      * @return self
      */
-    public static function invalidRoleInstance($role)
+    public static function invalidRoleInstance(mixed $role): InvalidRoleException
     {
         return new self(
-            sprintf('Invalid role of type "%s" provided', is_object($role) ? get_class($role) : gettype($role))
+            message: sprintf('Invalid role of type "%s" provided', get_debug_type(value: $role))
         );
     }
 }

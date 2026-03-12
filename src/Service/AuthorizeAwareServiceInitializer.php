@@ -19,7 +19,7 @@ class AuthorizeAwareServiceInitializer implements InitializerInterface
      *
      * @see \Laminas\ServiceManager\Initializer\InitializerInterface::__invoke()
      */
-    public function __invoke(ContainerInterface $container, $instance)
+    public function __invoke(ContainerInterface $container, $instance): void
     {
         if (! $instance instanceof AuthorizeAwareInterface) {
             return;
@@ -28,6 +28,6 @@ class AuthorizeAwareServiceInitializer implements InitializerInterface
         /** @var Authorize $authorize */
         $authorize = $container->get(Authorize::class);
 
-        $instance->setAuthorizeService($authorize);
+        $instance->setAuthorizeService(auth: $authorize);
     }
 }

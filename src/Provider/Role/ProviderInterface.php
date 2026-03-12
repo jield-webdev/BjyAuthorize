@@ -14,5 +14,5 @@ interface ProviderInterface
     /**
      * @return RoleInterface[]
      */
-    public function getRoles();
+    public function getRoles(): array;
 }

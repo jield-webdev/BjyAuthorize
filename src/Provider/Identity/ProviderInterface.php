@@ -17,5 +17,5 @@ interface ProviderInterface
      *
      * @return string[]|RoleInterface[]
      */
-    public function getIdentityRoles();
+    public function getIdentityRoles(): array;
 }

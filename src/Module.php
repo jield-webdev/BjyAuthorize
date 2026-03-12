@@ -24,30 +24,30 @@ class Module implements
     /**
      * {@inheritDoc}
      */
-    public function onBootstrap(EventInterface $event)
+    public function onBootstrap(EventInterface $event): void
     {
         /** @var ApplicationInterface $app */
         $app = $event->getTarget();
         /** @var ServiceManager $serviceManager */
         $serviceManager = $app->getServiceManager();
-        $config         = $serviceManager->get('BjyAuthorize\Config');
+        $config         = $serviceManager->get(name: 'BjyAuthorize\Config');
         /** @var UnauthorizedStrategy $strategy */
-        $strategy = $serviceManager->get($config['unauthorized_strategy']);
+        $strategy = $serviceManager->get(name: $config['unauthorized_strategy']);
         /** @var AbstractGuard[] $guards */
-        $guards = $serviceManager->get('BjyAuthorize\Guards');
+        $guards = $serviceManager->get(name: 'BjyAuthorize\Guards');
 
         // TODO remove in 3.0.0, fix alias
-        if ($serviceManager instanceof ServiceManager && $serviceManager->has('lmcuser_user_service') === false) {
-            $serviceManager->setAllowOverride(true);
-            $serviceManager->setAlias('lmcuser_user_service', 'zfcuser_user_service');
-            $serviceManager->setAllowOverride(false);
+        if ($serviceManager instanceof ServiceManager && $serviceManager->has(name: 'lmcuser_user_service') === false) {
+            $serviceManager->setAllowOverride(flag: true);
+            $serviceManager->setAlias(alias: 'lmcuser_user_service', target: 'zfcuser_user_service');
+            $serviceManager->setAllowOverride(flag: false);
         }
 
         foreach ($guards as $guard) {
-            $guard->attach($app->getEventManager());
+            $guard->attach(events: $app->getEventManager());
         }
 
-        $strategy->attach($app->getEventManager());
+        $strategy->attach(events: $app->getEventManager());
     }
 
     /**
@@ -61,7 +61,7 @@ class Module implements
     /**
      * {@inheritDoc}
      */
-    public function getModuleDependencies()
+    public function getModuleDependencies(): array
     {
         return [
             'Laminas\Cache',

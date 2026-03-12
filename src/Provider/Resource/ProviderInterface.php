@@ -14,5 +14,5 @@ interface ProviderInterface
     /**
      * @return ResourceInterface[]
      */
-    public function getResources();
+    public function getResources(): array;
 }

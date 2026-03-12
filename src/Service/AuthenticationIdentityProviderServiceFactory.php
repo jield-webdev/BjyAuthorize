@@ -18,14 +18,14 @@ class AuthenticationIdentityProviderServiceFactory implements FactoryInterface
      *
      * @see \Laminas\ServiceManager\Factory\FactoryInterface::__invoke()
      */
-    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)
+    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null): object|AuthenticationIdentityProvider
     {
         $user                   = $container->get('lmcuser_user_service');
-        $simpleIdentityProvider = new AuthenticationIdentityProvider($user->getAuthService());
+        $simpleIdentityProvider = new AuthenticationIdentityProvider(authService: $user->getAuthService());
         $config                 = $container->get('BjyAuthorize\Config');
 
-        $simpleIdentityProvider->setDefaultRole($config['default_role']);
-        $simpleIdentityProvider->setAuthenticatedRole($config['authenticated_role']);
+        $simpleIdentityProvider->setDefaultRole(defaultRole: $config['default_role']);
+        $simpleIdentityProvider->setAuthenticatedRole(authenticatedRole: $config['authenticated_role']);
 
         return $simpleIdentityProvider;
     }
