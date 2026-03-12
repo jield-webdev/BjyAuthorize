@@ -12,6 +12,7 @@ use Laminas\EventManager\ListenerAggregateInterface;
 use Laminas\Http\Response as HttpResponse;
 use Laminas\Mvc\Application;
 use Laminas\Mvc\MvcEvent;
+use Laminas\Stdlib\ResponseInterface;
 use Laminas\Stdlib\ResponseInterface as Response;
 use Laminas\View\Model\ViewModel;
 
@@ -75,17 +76,15 @@ class UnauthorizedStrategy implements ListenerAggregateInterface
      * Callback used when a dispatch error occurs. Modifies the
      * response object with an according error if the application
      * event contains an exception related with authorization.
-     *
-     * @return void
      */
-    public function onDispatchError(MvcEvent $event): void
+    public function onDispatchError(MvcEvent $event): ResponseInterface
     {
         // Do nothing if the result is a response object
         $result   = $event->getResult();
         $response = $event->getResponse();
 
-        if ($result instanceof Response || ($response && ! $response instanceof HttpResponse)) {
-            return;
+        if ($result instanceof Response || ($response && !$response instanceof HttpResponse)) {
+            return $result;
         }
 
         // Common view variables
@@ -103,8 +102,8 @@ class UnauthorizedStrategy implements ListenerAggregateInterface
                 $viewVariables['route'] = $event->getParam(name: 'route');
                 break;
             case Application::ERROR_EXCEPTION:
-                if (! $event->getParam(name: 'exception') instanceof UnAuthorizedException) {
-                    return;
+                if (!$event->getParam(name: 'exception') instanceof UnAuthorizedException) {
+                    return $result;
                 }
 
                 $viewVariables['reason'] = $event->getParam(name: 'exception')->getMessage();
@@ -117,7 +116,7 @@ class UnauthorizedStrategy implements ListenerAggregateInterface
                  * our 403 template to handle other types of errors)
                  */
 
-                return;
+                return $result;
         }
 
         $model    = new ViewModel(variables: $viewVariables);
@@ -127,5 +126,7 @@ class UnauthorizedStrategy implements ListenerAggregateInterface
         $event->getViewModel()->addChild(child: $model);
         $response->setStatusCode(code: 403);
         $event->setResponse(response: $response);
+
+        return $response;
     }
 }

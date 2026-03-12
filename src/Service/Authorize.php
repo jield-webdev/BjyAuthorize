@@ -140,7 +140,7 @@ class Authorize
         return $this->guards;
     }
 
-    public function getIdentity(): string
+    public function getIdentity()
     {
         $this->loaded && $this->loaded->__invoke();
 

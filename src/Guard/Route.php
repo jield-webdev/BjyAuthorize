@@ -32,7 +32,7 @@ class Route extends AbstractGuard
     /**
      * {@inheritDoc}
      */
-    public function attach(EventManagerInterface $events, $priority = 1): void
+    public function attach(EventManagerInterface $events, $priority = 1)
     {
         $this->listeners[] = $events->attach(eventName: MvcEvent::EVENT_ROUTE, listener: $this->onRoute(...), priority: -1000);
     }
