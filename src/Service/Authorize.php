@@ -29,12 +29,11 @@ use function print_r;
  */
 class Authorize
 {
-    public const TYPE_ALLOW = 'allow';
+    public const string TYPE_ALLOW = 'allow';
 
-    public const TYPE_DENY = 'deny';
+    public const string TYPE_DENY = 'deny';
 
-    /** @var Acl */
-    protected Acl $acl;
+    protected ?Acl $acl = null;
 
     /** @var RoleProvider[] */
     protected array $roleProviders = [];
@@ -45,16 +44,13 @@ class Authorize
     /** @var RuleProvider[] */
     protected array $ruleProviders = [];
 
-    /** @var IdentityProvider */
     protected IdentityProvider $identityProvider;
 
     /** @var GuardInterface[] */
     protected array $guards = [];
 
-    /** @var Closure|null */
-    protected ?Closure $loaded;
+    protected ?Closure $loaded = null;
 
-    /** @var ContainerInterface */
     protected ContainerInterface $serviceLocator;
 
     /** @var array */
@@ -68,7 +64,7 @@ class Authorize
         $this->config         = $config;
         $this->serviceLocator = $serviceLocator;
         $that                 = $this;
-        $this->loaded         = function () use ($that) {
+        $this->loaded         = static function () use ($that) {
             $that->load();
         };
     }

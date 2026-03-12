@@ -15,16 +15,11 @@ use Laminas\ServiceManager\Factory\FactoryInterface;
  */
 class ObjectRepositoryRoleProviderFactory implements FactoryInterface
 {
-    /**
-     * {@inheritDoc}
-     *
-     * @see \Laminas\ServiceManager\Factory\FactoryInterface::__invoke()
-     */
-    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null): object|ObjectRepositoryProvider
+    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null): ObjectRepositoryProvider
     {
         $config = $container->get('BjyAuthorize\Config');
 
-        if (! isset($config['role_providers'][ObjectRepositoryProvider::class])) {
+        if (!isset($config['role_providers'][ObjectRepositoryProvider::class])) {
             throw new InvalidArgumentException(
                 message: 'Config for "BjyAuthorize\Provider\Role\ObjectRepositoryProvider" not set'
             );
@@ -32,11 +27,11 @@ class ObjectRepositoryRoleProviderFactory implements FactoryInterface
 
         $providerConfig = $config['role_providers'][ObjectRepositoryProvider::class];
 
-        if (! isset($providerConfig['role_entity_class'])) {
+        if (!isset($providerConfig['role_entity_class'])) {
             throw new InvalidArgumentException(message: 'role_entity_class not set in the bjyauthorize role_providers config.');
         }
 
-        if (! isset($providerConfig['object_manager'])) {
+        if (!isset($providerConfig['object_manager'])) {
             throw new InvalidArgumentException(message: 'object_manager not set in the bjyauthorize role_providers config.');
         }
 

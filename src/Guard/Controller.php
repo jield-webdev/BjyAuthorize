@@ -6,12 +6,10 @@ namespace BjyAuthorize\Guard;
 
 use BjyAuthorize\Exception\UnAuthorizedException;
 use BjyAuthorize\Service\Authorize;
-use Laminas\Console\Request as ConsoleRequest;
 use Laminas\EventManager\EventManagerInterface;
 use Laminas\Http\Request as HttpRequest;
 use Laminas\Mvc\ApplicationInterface;
 use Laminas\Mvc\MvcEvent;
-use function class_exists;
 use function sprintf;
 use function strtolower;
 
@@ -21,14 +19,8 @@ use function strtolower;
  */
 class Controller extends AbstractGuard
 {
-    /**
-     * Marker for invalid route errors
-     */
-    public const ERROR = 'error-unauthorized-controller';
+    public const string ERROR = 'error-unauthorized-controller';
 
-    /**
-     * @return array
-     */
     protected function extractResourcesFromRule(array $rule): array
     {
         $results        = [];
@@ -43,17 +35,11 @@ class Controller extends AbstractGuard
         return $results;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function attach(EventManagerInterface $events, $priority = 1): void
     {
         $this->listeners[] = $events->attach(eventName: MvcEvent::EVENT_ROUTE, listener: $this->onDispatch(...), priority: -1000);
     }
 
-    /**
-     * Retrieves the resource name for a given controller
-     */
     public function getResourceName(string $controller, ?string $action = null): string
     {
         if (isset($action)) {
@@ -63,12 +49,6 @@ class Controller extends AbstractGuard
         return sprintf('controller/%s', $controller);
     }
 
-    /**
-     * Event callback to be triggered on dispatch, causes application error triggering
-     * in case of failed authorization check
-     *
-     * @return mixed
-     */
     public function onDispatch(MvcEvent $event): mixed
     {
         /** @var Authorize $service */
@@ -79,13 +59,13 @@ class Controller extends AbstractGuard
         $request    = $event->getRequest();
         $method     = $request instanceof HttpRequest ? strtolower(string: (string)$request->getMethod()) : null;
 
-        $authorized = (class_exists(class: ConsoleRequest::class) && $event->getRequest() instanceof ConsoleRequest)
+        $authorized = PHP_SAPI === 'cli'
             || $service->isAllowed(resource: $this->getResourceName(controller: $controller))
             || $service->isAllowed(resource: $this->getResourceName(controller: $controller, action: $action))
             || ($method && $service->isAllowed(resource: $this->getResourceName(controller: $controller, action: $method)));
 
         if ($authorized) {
-            return;
+            return $request;
         }
 
         $event->setError(message: static::ERROR);
